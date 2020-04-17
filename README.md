@@ -1,4 +1,4 @@
-# MelanomaApp
+# MelanomApp
 Android App for potential melanomas tracking
 
 ## Install guide
