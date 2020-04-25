@@ -1,0 +1,42 @@
+<resources>
+    <!-- Titles -->
+    <string name="app_name">Molecare</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_moles">MolesActivity</string>
+    <string name="title_activity_mole_history">MoleHistoryActivity</string>
+    <string name="head_moles">Head moles</string>
+    <string name="torso_moles">Torso moles</string>
+    <string name="left_arm_moles">Left arm moles</string>
+    <string name="right_arm_moles">Right arm moles</string>
+    <string name="left_leg_moles">Left leg moles</string>
+    <string name="right_leg_moles">Right leg moles</string>
+
+    <!-- Permissions -->
+    <string name="camera_permission_details">
+        This APP needs camera permission to add new moles.
+    </string>
+
+    <!-- Errors -->
+    <string name="error_camera_not_found">Error: Camera not found.</string>
+    <string name="error_creating_file">Error: Unable to create file.</string>
+    <string name="error_access_camera">Error: Unable to access the camera device.</string>
+    <string name="error_empty_name">Error: New mole name cannot be empty.</string>
+    <string name="error_mole_name_exists">Error: There is already a mole with that name.</string>
+    <string name="error_unexpected">Unexpected error. Please, try again.</string>
+    <string name="error_config_file">Error: Cannot read the configuration file.</string>
+
+    <!-- Notifications -->
+    <string name="new_mole_created">Mole created successfully.</string>
+    <string name="focus_locked">Focus has been locked</string>
+    <string name="focus_unlocked">Focus has been unlocked</string>
+    <string name="photo_taken">The photo has been taken!</string>
+
+    <!-- Dialogs -->
+    <string name="title_new_mole">New mole</string>
+    <string name="name_new_mole">The field below cannot be empty and must be different from the existing ones.</string>
+    <string name="hint_new_mole">Name of the new mole</string>
+    <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
+    <string name="capture">Capture</string>
+
+</resources>
