@@ -25,13 +25,12 @@ import com.rlopez.molecare.lists.RowItem;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MolesActivity extends AppCompatActivity implements NewMoleDialog.NewMoleDialogListener {
 
     // To get current configuration
-    File configFile;
+    File configFilePath;
     Configuration configuration;
 
     // Code for the camera granted permission
@@ -53,8 +52,8 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
         setSupportActionBar(toolbar);
 
         // Get configuration file and read it
-        configFile = new File(getIntent().getStringExtra("CONFIGURATION_FILE_PATH"));
-        configuration = Configuration.readConfigurationJSON(configFile, getApplicationContext());
+        configFilePath = new File(getIntent().getStringExtra("CONFIGURATION_FILE_PATH"));
+        configuration = Configuration.readConfigurationJSON(configFilePath, getApplicationContext());
 
         // Get elements from view and selected body part
         foldersView = findViewById(R.id.foldersList);
@@ -84,19 +83,19 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
             public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
                 // Get selected folder path
                 RowItem dataModel = (RowItem) adapter.getItemAtPosition(position);
-                String selectedFolderPath = bodyPartPath + File.separator + dataModel.getName();
+                String molePath = bodyPartPath + File.separator + dataModel.getName();
                 // Create mole history activity
-                //Intent intent = new Intent(MolesActivity.this, MoleHistoryActivity.class);
-                // intent.putExtra("PATH", selectedFolderPath);
-                //startActivity(intent);
+                Intent intent = new Intent(MolesActivity.this, MoleHistoryActivity.class);
+                intent.putExtra("CONFIGURATION_FILE_PATH", configFilePath.getAbsolutePath());
+                intent.putExtra("MOLE_PATH", molePath);
+                startActivity(intent);
             }
         });
 
-        // Handle long click on list items
+        // TODO Handle long click on list items
         foldersView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapter, View v, int position, long id) {
-                // TODO
                 return true;
             }
         });
@@ -162,10 +161,10 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
                 // Mole name already in use. Notify user
                 Toast.makeText(MolesActivity.this, R.string.error_mole_name_exists, Toast.LENGTH_SHORT).show();
             } else {
-                // Valid name. Call the method to create the NewMoleActivity
+                // Valid name, create camera intent
                 Intent intent = new Intent(MolesActivity.this, CameraActivity.class);
-                intent.putExtra("CONFIGURATION_FILE_PATH", configFile.getAbsolutePath());
-                intent.putExtra("BODY_PART_PATH", bodyPartPath);
+                intent.putExtra("CONFIGURATION_FILE_PATH", configFilePath.getAbsolutePath());
+                intent.putExtra("PATH", bodyPartPath);
                 intent.putExtra("MOLE_NAME", moleName);
                 startActivity(intent);
             }

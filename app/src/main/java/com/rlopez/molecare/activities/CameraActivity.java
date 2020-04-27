@@ -61,7 +61,7 @@ public class CameraActivity extends AppCompatActivity {
     private int trimDimension;
 
     private String configurationFilePath;
-    private String bodyPartPath;
+    private String folderPath;
     private String moleName;
 
     @Override
@@ -73,7 +73,7 @@ public class CameraActivity extends AppCompatActivity {
 
         // Get extras
         configurationFilePath = getIntent().getStringExtra("CONFIGURATION_FILE_PATH");
-        bodyPartPath = getIntent().getStringExtra("BODY_PART_PATH");
+        folderPath = getIntent().getStringExtra("PATH");
         moleName = getIntent().getStringExtra("MOLE_NAME");
 
         // Get trim dimension from configuration
@@ -81,7 +81,11 @@ public class CameraActivity extends AppCompatActivity {
         trimDimension = Integer.parseInt(configuration.getImageParameters().getTrimDimension());
 
         // Get mole folder
-        moleFolder = new File(bodyPartPath, moleName);
+        if(moleName != null) {
+            moleFolder = new File(folderPath, moleName);
+        } else {
+            moleFolder = new File(folderPath);
+        }
 
         // Set a listener for the camera preview
         cameraPreview = findViewById(R.id.textureView);

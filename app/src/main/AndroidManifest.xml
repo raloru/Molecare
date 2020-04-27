@@ -2,16 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.rlopez.molecare">
-
     <!-- Make the app unavailable to devices without camera -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
     <uses-feature
         android:name="android.hardware.camera2.full"
-        android:required="true" />
-
-    <!-- Define permissions needed -->
+        android:required="true" /> <!-- Define permissions needed -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -23,22 +20,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.MoleHistoryActivity"
+            android:label="@string/title_activity_mole_history"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".activities.CameraActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".activities.MolesActivity"
             android:label="@string/title_activity_moles"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"/> <!-- Activities -->
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity" /> <!-- Activities -->
         <activity
             android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            tools:ignore="LockedOrientationActivity"
-            />
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".activities.WelcomeActivity"
             android:screenOrientation="portrait"
