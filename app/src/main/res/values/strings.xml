@@ -29,7 +29,7 @@
     <string name="new_mole_created">Mole created successfully.</string>
     <string name="focus_locked">Focus has been locked</string>
     <string name="focus_unlocked">Focus has been unlocked</string>
-    <string name="photo_taken">The photo has been taken!</string>
+    <string name="photo_saved">The photo has been successfully saved!</string>
 
     <!-- Dialogs -->
     <string name="title_new_mole">New mole</string>
@@ -38,5 +38,8 @@
     <string name="ok">OK</string>
     <string name="cancel">CANCEL</string>
     <string name="capture">Capture</string>
+    <string name="photo_instructions_title">Instructions</string>
+    <string name="photo_instructions">Please make sure that the mole is within the colored area, filling it as much as possible.</string>
+
 
 </resources>

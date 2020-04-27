@@ -70,17 +70,10 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
 
         // Fill list with corresponding folders
         File[] subFiles = currentFolder.listFiles();
-        if (subFiles != null) {
-            for (File f : subFiles) {
-                if (f.isDirectory()) {
-                    // Get the first image in current folder and use it as item preview
-                    if (f.listFiles().length > 0) {
-                        File imgFile = new File(f.listFiles()[0].getAbsolutePath());
-                        Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                        folders.add(new RowItem(f.getName(), imgBitmap));
-                    }
-                }
-            }
+        for (File f : subFiles) {
+            File imgFile = new File(f.listFiles()[0].getAbsolutePath());
+            Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            folders.add(new RowItem(f.getName(), imgBitmap));
         }
 
         CustomArrayAdapter adapter = new CustomArrayAdapter(this, R.layout.list_item, folders);
@@ -174,7 +167,6 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
                 intent.putExtra("CONFIGURATION_FILE_PATH", configFile.getAbsolutePath());
                 intent.putExtra("BODY_PART_PATH", bodyPartPath);
                 intent.putExtra("MOLE_NAME", moleName);
-                intent.putExtra("OPERATION", "create");
                 startActivity(intent);
             }
         }

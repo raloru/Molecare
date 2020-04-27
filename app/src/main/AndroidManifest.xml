@@ -12,6 +12,7 @@
         android:required="true" />
 
     <!-- Define permissions needed -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -21,17 +22,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.CameraActivity" />
+        <activity
+            android:name=".activities.CameraActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".activities.MolesActivity"
             android:label="@string/title_activity_moles"
-            android:theme="@style/AppTheme.NoActionBar" /> <!-- Activities -->
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/> <!-- Activities -->
         <activity
             android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            tools:ignore="LockedOrientationActivity" />
+            tools:ignore="LockedOrientationActivity"
+            />
         <activity
             android:name=".activities.WelcomeActivity"
             android:screenOrientation="portrait"
