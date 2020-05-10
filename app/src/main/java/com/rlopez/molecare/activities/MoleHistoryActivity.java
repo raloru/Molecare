@@ -67,10 +67,14 @@ public class MoleHistoryActivity extends AppCompatActivity {
         // Fill list with corresponding image files
         List<RowItem> photos = new ArrayList<>();
         File[] subFiles = moleFolder.listFiles();
-        for (File f : subFiles) {
-            File imgFile = new File(f.getAbsolutePath());
-            Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            photos.add(new RowItem(f.getName(), imgBitmap));
+        if(subFiles.length > 0) {
+            for (File f : subFiles) {
+                if(!f.getName().contains("json")) {
+                    File imgFile = new File(f.getAbsolutePath());
+                    Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    photos.add(new RowItem(f.getName(), imgBitmap));
+                }
+            }
         }
         CustomArrayAdapter adapter = new CustomArrayAdapter(this, R.layout.list_item, photos);
         filesView.setAdapter(adapter);

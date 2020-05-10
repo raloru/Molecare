@@ -18,6 +18,7 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
@@ -33,14 +34,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.rlopez.molecare.R;
 import com.rlopez.molecare.configuration.Configuration;
 import com.rlopez.molecare.utils.AutoFitTextureView;
 import com.rlopez.molecare.utils.CropAndRotate;
 import com.rlopez.molecare.utils.FileManager;
+import com.rlopez.molecare.utils.ImageModel;
+import com.rlopez.molecare.utils.ImagesInformation;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -59,10 +64,12 @@ public class CameraActivity extends AppCompatActivity {
     private CameraCharacteristics characteristics;
     private File moleFolder;
     private int trimDimension;
+    private ImagesInformation imagesInformation;
 
     private String configurationFilePath;
     private String folderPath;
     private String moleName;
+    private File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +85,10 @@ public class CameraActivity extends AppCompatActivity {
 
         // Get trim dimension from configuration
         Configuration configuration = Configuration.readConfigurationJSON(new File(configurationFilePath), getApplicationContext());
-        trimDimension = Integer.parseInt(configuration.getImageParameters().getTrimDimension());
+        trimDimension = Integer.parseInt(configuration.getImageConfiguration().getTrimDimension());
 
         // Get mole folder
-        if(moleName != null) {
+        if (moleName != null) {
             moleFolder = new File(folderPath, moleName);
         } else {
             moleFolder = new File(folderPath);
@@ -100,16 +107,6 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
-        AlertDialog alertDialog = new AlertDialog.Builder(CameraActivity.this).create();
-        alertDialog.setTitle(R.string.photo_instructions_title);
-        alertDialog.setMessage(getString(R.string.photo_instructions));
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
     }
 
     // Take the photo
@@ -153,13 +150,6 @@ public class CameraActivity extends AppCompatActivity {
 
                 // Save a bytes array into a file
                 void save(byte[] bytes) throws IOException {
-                    // If creating a new mole, create needed folder
-                    if (!moleFolder.exists()) {
-                        moleFolder.mkdirs();
-                    }
-
-                    // Create the photo file with current timestamp
-                    File photoFile = FileManager.createTempPhotoFile(moleFolder.getAbsolutePath());
 
                     // Save bytes to the new photo file
                     OutputStream outputStream = null;
@@ -205,6 +195,53 @@ public class CameraActivity extends AppCompatActivity {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
+
+                    // If creating a new mole, create needed folder
+                    if (!moleFolder.exists()) {
+                        moleFolder.mkdirs();
+                    }
+
+                    // Create the photo file with current timestamp
+                    try {
+                        photoFile = FileManager.createTempPhotoFile(moleFolder.getAbsolutePath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Save the focus used to take the photo into a JSON file
+                    File imagesInformationFile = new File(moleFolder.getAbsolutePath(), "ImagesInformation.json");
+                    ImageModel imageModel = new ImageModel(photoFile.getName(), String.valueOf(result.get(CaptureResult.LENS_FOCUS_DISTANCE)));
+                    Gson gson = new Gson();
+                    if (!imagesInformationFile.exists()) {
+                        try {
+                            List<ImageModel> imageModelList = new ArrayList<>();
+                            imageModelList.add(imageModel);
+                            imagesInformation = new ImagesInformation(imageModelList);
+                            String imagesInformationJSON = gson.toJson(imagesInformation);
+
+                            // Create the new JSON file
+                            FileWriter JSONWriter = new FileWriter(imagesInformationFile);
+                            JSONWriter.append(imagesInformationJSON);
+                            JSONWriter.flush();
+                            JSONWriter.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            imagesInformation = ImagesInformation.readImagesInformationJSON(imagesInformationFile, getApplicationContext());
+                            imagesInformation.addImageModel(imageModel);
+                            String imagesInformationJSON = gson.toJson(imagesInformation);
+
+                            // Update the JSON file
+                            FileWriter JSONWriter = new FileWriter(imagesInformationFile);
+                            JSONWriter.write(imagesInformationJSON);
+                            JSONWriter.flush();
+                            JSONWriter.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     // Finish this activity
                     CameraActivity.this.finish();
                 }
@@ -246,6 +283,18 @@ public class CameraActivity extends AppCompatActivity {
         } catch (CameraAccessException e) {
             Toast.makeText(getApplicationContext(), R.string.error_access_camera, Toast.LENGTH_SHORT).show();
         }
+
+        // Informative dialog
+        AlertDialog alertDialog = new AlertDialog.Builder(CameraActivity.this).create();
+        alertDialog.setTitle(R.string.photo_instructions_title);
+        alertDialog.setMessage(getString(R.string.photo_instructions));
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 
     // Configure the listener for the camera preview

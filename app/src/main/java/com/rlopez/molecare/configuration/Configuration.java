@@ -15,16 +15,16 @@ import java.io.IOException;
 public class Configuration {
 
     private Paths paths;
-    private ImageParameters imageParameters;
+    private ImageConfiguration imageConfiguration;
 
     public Configuration() {
         paths = new Paths();
-        imageParameters = new ImageParameters();
+        imageConfiguration = new ImageConfiguration();
     }
 
     public Configuration(String imagesPath) {
         paths = new Paths();
-        imageParameters = new ImageParameters();
+        imageConfiguration = new ImageConfiguration();
         paths.setImagesPath(imagesPath);
         paths.setHeadImagesPath(imagesPath + File.separator + "Head moles");
         paths.setTorsoImagesPath(imagesPath + File.separator + "Torso moles");
@@ -32,7 +32,7 @@ public class Configuration {
         paths.setRightArmImagesPath(imagesPath + File.separator + "Right arm moles");
         paths.setLeftLegImagesPath(imagesPath + File.separator + "Left leg moles");
         paths.setRightLegImagesPath(imagesPath + File.separator + "Right leg moles");
-        imageParameters.setTrimDimension("512");
+        imageConfiguration.setTrimDimension("512");
     }
 
     public Paths getPaths() {
@@ -43,12 +43,12 @@ public class Configuration {
         this.paths = paths;
     }
 
-    public ImageParameters getImageParameters() {
-        return imageParameters;
+    public ImageConfiguration getImageConfiguration() {
+        return imageConfiguration;
     }
 
-    public void setImageParameters(ImageParameters imageParameters) {
-        this.imageParameters = imageParameters;
+    public void setImageConfiguration(ImageConfiguration imageConfiguration) {
+        this.imageConfiguration = imageConfiguration;
     }
 
     // Read the configuration JSON and return it as a string

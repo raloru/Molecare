@@ -1,0 +1,54 @@
+package com.rlopez.molecare.utils;
+
+import android.content.Context;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.rlopez.molecare.R;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
+
+public class ImagesInformation {
+
+    List<ImageModel> imageModels;
+
+    public ImagesInformation(List<ImageModel> imageModels) {
+        this.imageModels = imageModels;
+    }
+
+    public List<ImageModel> getImageModels() {
+        return imageModels;
+    }
+
+    public void setImageModels(List<ImageModel> imageModels) {
+        this.imageModels = imageModels;
+    }
+
+    public void addImageModel(ImageModel imageModel) {
+        this.imageModels.add(imageModel);
+    }
+
+    // Read the configuration JSON and return it as a string
+    public static ImagesInformation readImagesInformationJSON(File imagesInformationFile, Context context) {
+        StringBuilder jsonContent = new StringBuilder();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(imagesInformationFile));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                jsonContent.append(line);
+                jsonContent.append('\n');
+            }
+            bufferedReader.close();
+        }
+        catch (IOException e) {
+            Toast.makeText(context, R.string.error_unexpected, Toast.LENGTH_SHORT).show();
+        }
+        Gson gson = new Gson();
+        return gson.fromJson(jsonContent.toString(), ImagesInformation.class);
+    }
+}

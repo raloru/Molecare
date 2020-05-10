@@ -1,6 +1,7 @@
 package com.rlopez.molecare.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -69,10 +71,12 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
 
         // Fill list with corresponding folders
         File[] subFiles = currentFolder.listFiles();
-        for (File f : subFiles) {
-            File imgFile = new File(f.listFiles()[0].getAbsolutePath());
-            Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            folders.add(new RowItem(f.getName(), imgBitmap));
+        if(subFiles.length > 0) {
+            for (File f : subFiles) {
+                File imgFile = new File(f.listFiles()[0].getAbsolutePath());
+                Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                folders.add(new RowItem(f.getName(), imgBitmap));
+            }
         }
 
         CustomArrayAdapter adapter = new CustomArrayAdapter(this, R.layout.list_item, folders);
@@ -92,10 +96,11 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
             }
         });
 
-        // TODO Handle long click on list items
         foldersView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapter, View v, int position, long id) {
+                RowItem dataModel = (RowItem) adapter.getItemAtPosition(position);
+                String molePath = bodyPartPath + File.separator + dataModel.getName();
                 return true;
             }
         });
@@ -178,6 +183,7 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
         finish();
         startActivity(getIntent());
     }
+
 
 }
 

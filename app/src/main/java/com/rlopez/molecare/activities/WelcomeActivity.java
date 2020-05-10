@@ -19,10 +19,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
     File configFile;
 
-    // Wait time in milliseconds
-    private static int
-            WAIT_TIME_MS = 2000;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +55,8 @@ public class WelcomeActivity extends AppCompatActivity {
         createFolders(configuration.getPaths().getBodyPartsList());
 
         // Wait WAIT_TIME_MS and go to home activity
+        // Wait time in milliseconds
+        int WAIT_TIME_MS = 2000;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

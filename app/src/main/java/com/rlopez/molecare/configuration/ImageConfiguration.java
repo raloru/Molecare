@@ -1,6 +1,6 @@
 package com.rlopez.molecare.configuration;
 
-public class ImageParameters {
+public class ImageConfiguration {
 
     private String trimDimension;
 
@@ -13,4 +13,3 @@ public class ImageParameters {
     }
 
 }
-
