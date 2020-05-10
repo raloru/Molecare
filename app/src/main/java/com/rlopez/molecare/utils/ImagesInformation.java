@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 public class ImagesInformation {
@@ -31,6 +32,18 @@ public class ImagesInformation {
 
     public void addImageModel(ImageModel imageModel) {
         this.imageModels.add(imageModel);
+    }
+
+    public void deleteImageModel(String name) {
+        ImageModel imageModelDelete;
+        Iterator<ImageModel> imageModelsIterator = imageModels.iterator();
+        while(imageModelsIterator.hasNext()) {
+            imageModelDelete = imageModelsIterator.next();
+            if(imageModelDelete.getName().equals(name)) {
+                imageModels.remove(imageModelDelete);
+                break;
+            }
+        }
     }
 
     // Read the configuration JSON and return it as a string

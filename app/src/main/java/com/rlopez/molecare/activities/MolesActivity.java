@@ -1,7 +1,8 @@
 package com.rlopez.molecare.activities;
 
 import android.Manifest;
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -9,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -44,6 +44,8 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
     // Folders name and image
     private List<RowItem> folders = new ArrayList<>();
 
+    CustomArrayAdapter customAdapter;
+
     ListView foldersView;
 
     @Override
@@ -71,7 +73,7 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
 
         // Fill list with corresponding folders
         File[] subFiles = currentFolder.listFiles();
-        if(subFiles.length > 0) {
+        if (subFiles.length > 0) {
             for (File f : subFiles) {
                 File imgFile = new File(f.listFiles()[0].getAbsolutePath());
                 Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
@@ -79,9 +81,8 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
             }
         }
 
-        CustomArrayAdapter adapter = new CustomArrayAdapter(this, R.layout.list_item, folders);
-        foldersView.setAdapter(adapter);
-
+        customAdapter = new CustomArrayAdapter(this, R.layout.list_item, folders);
+        foldersView.setAdapter(customAdapter);
         // Handle click on list items
         foldersView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
@@ -98,9 +99,32 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
 
         foldersView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapter, View v, int position, long id) {
-                RowItem dataModel = (RowItem) adapter.getItemAtPosition(position);
-                String molePath = bodyPartPath + File.separator + dataModel.getName();
+            public boolean onItemLongClick(AdapterView<?> adapter, View v, final int position, long id) {
+                final RowItem dataModel = (RowItem) adapter.getItemAtPosition(position);
+                final String molePath = bodyPartPath + File.separator + dataModel.getName();
+
+                // Ask if the user wants to delete the mole
+                AlertDialog alertDialog = new AlertDialog.Builder(MolesActivity.this).create();
+                alertDialog.setTitle(R.string.delete);
+                alertDialog.setMessage(getString(R.string.delete_first_part) + " " + dataModel.getName() + " " + getString(R.string.delete_mole_second_part));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                File moleFileDelete = new File(molePath);
+                                deleteMole(moleFileDelete);
+                                folders.remove(position);
+                                customAdapter.notifyDataSetChanged();
+                                Toast.makeText(getApplicationContext(), dataModel.getName() + " " + getString(R.string.deleted), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+
                 return true;
             }
         });
@@ -111,6 +135,15 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
                 checkCameraPermission();
             }
         });
+    }
+
+    private void deleteMole(File moleFileDelete) {
+        String[] children = moleFileDelete.list();
+        for (int i = 0; i < children.length; i++)
+        {
+            new File(moleFileDelete, children[i]).delete();
+        }
+        moleFileDelete.delete();
     }
 
     private void checkCameraPermission() {
