@@ -24,6 +24,7 @@ import com.rlopez.molecare.configuration.Configuration;
 import com.rlopez.molecare.lists.CustomArrayAdapter;
 import com.rlopez.molecare.dialogs.NewMoleDialog;
 import com.rlopez.molecare.lists.RowItem;
+import com.rlopez.molecare.utils.FileManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,14 +73,7 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
         setTitle(currentFolder.getName());
 
         // Fill list with corresponding folders
-        File[] subFiles = currentFolder.listFiles();
-        if (subFiles.length > 0) {
-            for (File f : subFiles) {
-                File imgFile = new File(f.listFiles()[0].getAbsolutePath());
-                Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                folders.add(new RowItem(f.getName(), imgBitmap));
-            }
-        }
+        getMoles();
 
         customAdapter = new CustomArrayAdapter(this, R.layout.list_item, folders);
         foldersView.setAdapter(customAdapter);
@@ -111,7 +105,7 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 File moleFileDelete = new File(molePath);
-                                deleteMole(moleFileDelete);
+                                FileManager.deleteFolderAndChildren(moleFileDelete);
                                 folders.remove(position);
                                 customAdapter.notifyDataSetChanged();
                                 Toast.makeText(getApplicationContext(), dataModel.getName() + " " + getString(R.string.deleted), Toast.LENGTH_SHORT).show();
@@ -137,13 +131,17 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
         });
     }
 
-    private void deleteMole(File moleFileDelete) {
-        String[] children = moleFileDelete.list();
-        for (int i = 0; i < children.length; i++)
-        {
-            new File(moleFileDelete, children[i]).delete();
+    private void getMoles() {
+        // Fill list with corresponding folders
+        folders.removeAll(folders);
+        File[] subFiles = currentFolder.listFiles();
+        if (subFiles.length > 0) {
+            for (File f : subFiles) {
+                File imgFile = new File(f.listFiles()[0].getAbsolutePath());
+                Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                folders.add(new RowItem(f.getName(), imgBitmap));
+            }
         }
-        moleFileDelete.delete();
     }
 
     private void checkCameraPermission() {
@@ -213,8 +211,8 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
     @Override
     public void onRestart() {
         super.onRestart();
-        finish();
-        startActivity(getIntent());
+        getMoles();
+        customAdapter.notifyDataSetChanged();
     }
 
 

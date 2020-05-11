@@ -11,12 +11,11 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
 import com.rlopez.molecare.R;
 import com.rlopez.molecare.configuration.Configuration;
 import com.rlopez.molecare.lists.CustomArrayAdapter;
 import com.rlopez.molecare.lists.RowItem;
-import com.rlopez.molecare.images.ImagesInformation;
+import com.rlopez.molecare.utils.FileManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,10 +27,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MoleHistoryActivity extends AppCompatActivity {
 
@@ -42,7 +40,6 @@ public class MoleHistoryActivity extends AppCompatActivity {
     private String molePath;
     private File moleFolder;
 
-    private ListView filesView;
     List<RowItem> photos;
     CustomArrayAdapter customAdapter;
             
@@ -58,30 +55,25 @@ public class MoleHistoryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Get configuration file and read it
-        configFilePath = new File(getIntent().getStringExtra("CONFIGURATION_FILE_PATH"));
+        configFilePath = new File(Objects.requireNonNull(getIntent().getStringExtra("CONFIGURATION_FILE_PATH")));
         configuration = Configuration.readConfigurationJSON(configFilePath, getApplicationContext());
 
         // Get elements from view
         FloatingActionButton fab = findViewById(R.id.fab);
-        filesView = findViewById(R.id.photosList);
+        ListView filesView = findViewById(R.id.photosList);
         Bundle extras = getIntent().getExtras();
 
         // Set parent path and current folder
+        assert extras != null;
         molePath = extras.getString("MOLE_PATH");
+        assert molePath != null;
         moleFolder = new File(molePath);
 
         // Fill list with corresponding image files
         photos = new ArrayList<>();
-        File[] subFiles = moleFolder.listFiles();
-        if(subFiles.length > 0) {
-            for (File f : subFiles) {
-                if(!f.getName().contains("json")) {
-                    File imgFile = new File(f.getAbsolutePath());
-                    Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                    photos.add(new RowItem(f.getName(), imgBitmap));
-                }
-            }
-        }
+
+        getPhotos();
+
         customAdapter = new CustomArrayAdapter(this, R.layout.list_item, photos);
         filesView.setAdapter(customAdapter);
 
@@ -99,7 +91,7 @@ public class MoleHistoryActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 File photoFileDelete = new File(imagePath);
-                                deletePhoto(photoFileDelete);
+                                FileManager.deletePhotoFile(photoFileDelete, new File(moleFolder.getAbsolutePath()), MoleHistoryActivity.this);
                                 photos.remove(position);
                                 customAdapter.notifyDataSetChanged();
                             }
@@ -123,36 +115,20 @@ public class MoleHistoryActivity extends AppCompatActivity {
         });
     }
 
-    private void deletePhoto(File photoFileDelete) {
-        File parent = photoFileDelete.getParentFile();
-        String[] children = parent.list();
-        if(children.length == 2) {
-            for (int i = 0; i < children.length; i++)
-            {
-                new File(parent, children[i]).delete();
+    private void getPhotos() {
+        // Fill list with corresponding photos
+        photos.removeAll(photos);
+        File[] subFiles = moleFolder.listFiles();
+        assert subFiles != null;
+        if(subFiles.length > 0) {
+            for (File f : subFiles) {
+                if(!f.getName().contains("json")) {
+                    File imgFile = new File(f.getAbsolutePath());
+                    Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    photos.add(new RowItem(f.getName(), imgBitmap));
+                }
             }
-            parent.delete();
-            Toast.makeText(getApplicationContext(), parent.getName() + " " + getString(R.string.deleted), Toast.LENGTH_SHORT).show();
-            MoleHistoryActivity.this.finish();
-        } else {
-            File imagesInformationFile = new File(moleFolder.getAbsolutePath(), "ImagesInformation.json");
-            ImagesInformation imagesInformation = ImagesInformation.readImagesInformationJSON(imagesInformationFile, getApplicationContext());
-            imagesInformation.deleteImageModel(photoFileDelete.getName());
-            Gson gson = new Gson();
-            String imagesInformationJSON = gson.toJson(imagesInformation);
-            try {
-                // Update the JSON file
-                FileWriter JSONWriter = new FileWriter(imagesInformationFile);
-                JSONWriter.write(imagesInformationJSON);
-                JSONWriter.flush();
-                JSONWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            photoFileDelete.delete();
-            Toast.makeText(getApplicationContext(), photoFileDelete.getName() + " " + getString(R.string.deleted), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void checkCameraPermission() {
@@ -202,8 +178,8 @@ public class MoleHistoryActivity extends AppCompatActivity {
     @Override
     public void onRestart() {
         super.onRestart();
-        finish();
-        startActivity(getIntent());
+        getPhotos();
+        customAdapter.notifyDataSetChanged();
     }
 }
 
