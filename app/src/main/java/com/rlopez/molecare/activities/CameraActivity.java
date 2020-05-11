@@ -151,11 +151,12 @@ public class CameraActivity extends AppCompatActivity {
 
                 // Save a bytes array into a file
                 void save(byte[] bytes) {
-
                     // Save bytes to the new photo file
                     OutputStream outputStream = null;
+                    File tempPhotoFile = null;
                     try {
-                        outputStream = new FileOutputStream(photoFile);
+                        tempPhotoFile = FileManager.createTempPhotoFile(moleFolder.getAbsolutePath());
+                        outputStream = new FileOutputStream(tempPhotoFile);
                         outputStream.write(bytes);
                     } catch (IOException e) {
                         Toast.makeText(getApplicationContext(), R.string.error_creating_file, Toast.LENGTH_SHORT).show();
@@ -165,10 +166,12 @@ public class CameraActivity extends AppCompatActivity {
                                 outputStream.close();
                             }
                             // Trim the image and rotate it if needed
-                            Bitmap preProcessedPhoto = ImageProcessor.cropAndRotatePhoto(photoFile, trimDimension);
+                            Bitmap preProcessedPhoto = ImageProcessor.cropAndRotatePhoto(tempPhotoFile, trimDimension);
                             try (FileOutputStream out = new FileOutputStream(photoFile)) {
                                 preProcessedPhoto.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                                tempPhotoFile.delete();
                                 Toast.makeText(getApplicationContext(), R.string.photo_saved, Toast.LENGTH_SHORT).show();
+                                CameraActivity.this.finish();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -243,8 +246,6 @@ public class CameraActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    // Finish this activity
-                    CameraActivity.this.finish();
                 }
             };
             cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
