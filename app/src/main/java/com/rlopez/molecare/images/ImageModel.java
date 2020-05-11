@@ -1,4 +1,4 @@
-package com.rlopez.molecare.utils;
+package com.rlopez.molecare.images;
 
 public class ImageModel {
 

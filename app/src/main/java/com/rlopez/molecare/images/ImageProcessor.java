@@ -1,4 +1,4 @@
-package com.rlopez.molecare.utils;
+package com.rlopez.molecare.images;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import java.io.File;
 import java.io.IOException;
 
-public class CropAndRotate {
+public class ImageProcessor {
 
     // Rotate the bitmap if necessary to get the correct orientation
     public static Bitmap cropAndRotatePhoto(File photoFile, int trimDimension) throws IOException {

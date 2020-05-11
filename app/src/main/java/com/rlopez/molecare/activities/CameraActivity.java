@@ -38,10 +38,10 @@ import com.google.gson.Gson;
 import com.rlopez.molecare.R;
 import com.rlopez.molecare.configuration.Configuration;
 import com.rlopez.molecare.utils.AutoFitTextureView;
-import com.rlopez.molecare.utils.CropAndRotate;
+import com.rlopez.molecare.images.ImageProcessor;
 import com.rlopez.molecare.utils.FileManager;
-import com.rlopez.molecare.utils.ImageModel;
-import com.rlopez.molecare.utils.ImagesInformation;
+import com.rlopez.molecare.images.ImageModel;
+import com.rlopez.molecare.images.ImagesInformation;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,6 +71,8 @@ public class CameraActivity extends AppCompatActivity {
     private String moleName;
     private File photoFile;
 
+    ImageView captureButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,10 +101,11 @@ public class CameraActivity extends AppCompatActivity {
         cameraPreview.setSurfaceTextureListener(surfaceTextureListener);
 
         // If capture button is pressed, take a photo
-        Button captureButton = findViewById(R.id.captureButton);
+        captureButton = findViewById(R.id.shutter_button);
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                captureButton.setImageDrawable(getDrawable(R.drawable.shutter_button));
                 takePhoto();
             }
         });
@@ -140,8 +143,6 @@ public class CameraActivity extends AppCompatActivity {
                         byte[] bytes = new byte[buffer.capacity()];
                         buffer.get(bytes);
                         save(bytes);
-                    } catch (IOException e) {
-                        Toast.makeText(getApplicationContext(), R.string.error_creating_file, Toast.LENGTH_SHORT).show();
                     } finally {
                         if (image != null)
                             image.close();
@@ -149,7 +150,7 @@ public class CameraActivity extends AppCompatActivity {
                 }
 
                 // Save a bytes array into a file
-                void save(byte[] bytes) throws IOException {
+                void save(byte[] bytes) {
 
                     // Save bytes to the new photo file
                     OutputStream outputStream = null;
@@ -164,7 +165,7 @@ public class CameraActivity extends AppCompatActivity {
                                 outputStream.close();
                             }
                             // Trim the image and rotate it if needed
-                            Bitmap preProcessedPhoto = CropAndRotate.cropAndRotatePhoto(photoFile, trimDimension);
+                            Bitmap preProcessedPhoto = ImageProcessor.cropAndRotatePhoto(photoFile, trimDimension);
                             try (FileOutputStream out = new FileOutputStream(photoFile)) {
                                 preProcessedPhoto.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
                                 Toast.makeText(getApplicationContext(), R.string.photo_saved, Toast.LENGTH_SHORT).show();

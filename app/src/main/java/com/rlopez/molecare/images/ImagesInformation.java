@@ -1,4 +1,4 @@
-package com.rlopez.molecare.utils;
+package com.rlopez.molecare.images;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -8,7 +8,6 @@ import com.rlopez.molecare.R;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
@@ -44,6 +43,20 @@ public class ImagesInformation {
                 break;
             }
         }
+    }
+
+    public float getImageFocus(String name) {
+        float focus = 0;
+        ImageModel imageModel;
+        Iterator<ImageModel> imageModelsIterator = imageModels.iterator();
+        while(imageModelsIterator.hasNext()) {
+            imageModel= imageModelsIterator.next();
+            if(imageModel.getName().equals(name)) {
+                focus = Float.valueOf(imageModel.getFocus());
+                break;
+            }
+        }
+        return focus;
     }
 
     // Read the configuration JSON and return it as a string

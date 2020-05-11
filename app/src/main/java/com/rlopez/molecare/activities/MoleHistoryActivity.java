@@ -16,7 +16,7 @@ import com.rlopez.molecare.R;
 import com.rlopez.molecare.configuration.Configuration;
 import com.rlopez.molecare.lists.CustomArrayAdapter;
 import com.rlopez.molecare.lists.RowItem;
-import com.rlopez.molecare.utils.ImagesInformation;
+import com.rlopez.molecare.images.ImagesInformation;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
