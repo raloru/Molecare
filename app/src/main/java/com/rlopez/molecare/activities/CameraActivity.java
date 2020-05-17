@@ -30,7 +30,6 @@ import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -66,9 +65,6 @@ public class CameraActivity extends AppCompatActivity {
     private int trimDimension;
     private ImagesInformation imagesInformation;
 
-    private String configurationFilePath;
-    private String folderPath;
-    private String moleName;
     private File photoFile;
 
     ImageView captureButton;
@@ -81,11 +77,12 @@ public class CameraActivity extends AppCompatActivity {
         squareView = findViewById(R.id.cameraSquareView);
 
         // Get extras
-        configurationFilePath = getIntent().getStringExtra("CONFIGURATION_FILE_PATH");
-        folderPath = getIntent().getStringExtra("PATH");
-        moleName = getIntent().getStringExtra("MOLE_NAME");
+        String configurationFilePath = getIntent().getStringExtra("CONFIGURATION_FILE_PATH");
+        String folderPath = getIntent().getStringExtra("PATH");
+        String moleName = getIntent().getStringExtra("MOLE_NAME");
 
         // Get trim dimension from configuration
+        assert configurationFilePath != null;
         Configuration configuration = Configuration.readConfigurationJSON(new File(configurationFilePath), getApplicationContext());
         trimDimension = Integer.parseInt(configuration.getImageConfiguration().getTrimDimension());
 
@@ -93,6 +90,7 @@ public class CameraActivity extends AppCompatActivity {
         if (moleName != null) {
             moleFolder = new File(folderPath, moleName);
         } else {
+            assert folderPath != null;
             moleFolder = new File(folderPath);
         }
 
@@ -114,6 +112,7 @@ public class CameraActivity extends AppCompatActivity {
 
     // Take the photo
     private void takePhoto() {
+        Toast.makeText(getApplicationContext(), R.string.photo_processing, Toast.LENGTH_LONG).show();
         if (cameraDevice == null) {
             return;
         }
@@ -168,7 +167,7 @@ public class CameraActivity extends AppCompatActivity {
                             // Trim the image and rotate it if needed
                             Bitmap preProcessedPhoto = ImageProcessor.cropAndRotatePhoto(tempPhotoFile, trimDimension);
                             try (FileOutputStream out = new FileOutputStream(photoFile)) {
-                                preProcessedPhoto.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                                preProcessedPhoto.compress(Bitmap.CompressFormat.PNG, 100, out);
                                 tempPhotoFile.delete();
                                 Toast.makeText(getApplicationContext(), R.string.photo_saved, Toast.LENGTH_SHORT).show();
                                 CameraActivity.this.finish();
@@ -378,10 +377,18 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         // Set central square dimension
-        int dimensionFactor = (imageDimensions.getHeight() * imageDimensions.getWidth()) / (cameraPreview.getHeight() * cameraPreview.getWidth());
+        /*int dimensionFactor = (imageDimensions.getHeight() * imageDimensions.getWidth()) / (cameraPreview.getHeight() * cameraPreview.getWidth());
         int newSquareSideDimension = (trimDimension / dimensionFactor);
         squareView.getLayoutParams().width = newSquareSideDimension;
-        squareView.getLayoutParams().height = newSquareSideDimension;
+        squareView.getLayoutParams().height = newSquareSideDimension;*/
+
+        // Set central square adjusted dimension
+        int imagePixels = imageDimensions.getHeight() * imageDimensions.getWidth();
+        int previewPixels = cameraPreview.getHeight() * cameraPreview.getWidth();
+        int trimPixels = trimDimension*trimDimension;
+        int adjustedTrimPixels = previewPixels / (imagePixels/trimPixels);
+        squareView.getLayoutParams().width = (int) Math.round(Math.sqrt(adjustedTrimPixels));
+        squareView.getLayoutParams().height = (int) Math.round(Math.sqrt(adjustedTrimPixels));
 
         // Get the surface and attach it to the camera request builder
         Surface surface = new Surface(texture);

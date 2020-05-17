@@ -7,6 +7,7 @@ import android.graphics.Point;
 
 import androidx.exifinterface.media.ExifInterface;
 
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -21,27 +22,38 @@ public class ImageProcessor {
         // Get the photo exif (information about image generation)
         ExifInterface exif = new ExifInterface(photoFile.getAbsolutePath());
 
-        // Get current rotation in degrees
+        // Get current rotation
         int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-        int rotationInDegrees = exifToDegrees(rotation);
-
-        // Use a matrix to rotate the image
-        Matrix matrix = new Matrix();
-        if (rotation != 0) {
-            matrix.preRotate(rotationInDegrees);
+        switch (rotation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotation = 180;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotation = 270;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotation = 0;
+                break;
+            default:
+                rotation = 90;
         }
 
-        // Create new bitmap with corresponding rotation and crop it
-        Bitmap oldBitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-        Bitmap adjustedBitmap = Bitmap.createBitmap(oldBitmap, 0, 0, oldBitmap.getWidth(), oldBitmap.getHeight(), matrix, true);
+        // Rotate the image if needed
+        Bitmap original = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+        int width = original.getWidth();
+        int height = original.getHeight();
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotation);
 
-        return cropBitmap(adjustedBitmap, trimDimension);
+        Bitmap rotated = Bitmap.createBitmap(original, 0, 0, width, height, matrix, true);
+
+        return cropBitmap(rotated, trimDimension);
     }
 
     // Get a center square crop from a bitmap
     private static Bitmap cropBitmap(Bitmap imgBitmap, int trimDimension) {
 
-        Bitmap croppedBitmap = imgBitmap;
+        Bitmap croppedBitmap;
         int startPixelX;
         int startPixelY;
         int width = imgBitmap.getWidth();
@@ -53,21 +65,7 @@ public class ImageProcessor {
 
         // Trim the image
         croppedBitmap = Bitmap.createBitmap(imgBitmap, startPixelX, startPixelY, trimDimension, trimDimension);
-
         return croppedBitmap;
-    }
-
-    // Transform exif to degress
-    private static int exifToDegrees(int exifOrientation) {
-        int degrees = 0;
-        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
-            degrees = 90;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
-            degrees = 180;
-        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
-            degrees = 270;
-        }
-        return degrees;
     }
 
 }

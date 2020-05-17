@@ -45,14 +45,14 @@ public class ImagesInformation {
         }
     }
 
-    public float getImageFocus(String name) {
-        float focus = 0;
+    public double getImageFocus(String name) {
+        double focus = 0;
         ImageModel imageModel;
         Iterator<ImageModel> imageModelsIterator = imageModels.iterator();
         while(imageModelsIterator.hasNext()) {
             imageModel= imageModelsIterator.next();
             if(imageModel.getName().equals(name)) {
-                focus = Float.valueOf(imageModel.getFocus());
+                focus = Double.valueOf(imageModel.getFocus());
                 break;
             }
         }

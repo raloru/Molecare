@@ -29,6 +29,7 @@ import com.rlopez.molecare.utils.FileManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MolesActivity extends AppCompatActivity implements NewMoleDialog.NewMoleDialogListener {
 
@@ -57,7 +58,7 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
         setSupportActionBar(toolbar);
 
         // Get configuration file and read it
-        configFilePath = new File(getIntent().getStringExtra("CONFIGURATION_FILE_PATH"));
+        configFilePath = new File(Objects.requireNonNull(getIntent().getStringExtra("CONFIGURATION_FILE_PATH")));
         configuration = Configuration.readConfigurationJSON(configFilePath, getApplicationContext());
 
         // Get elements from view and selected body part
@@ -66,7 +67,9 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
 
         // Get current path and folder
         Bundle extras = getIntent().getExtras();
+        assert extras != null;
         bodyPartPath = extras.getString("BODY_PART_PATH");
+        assert bodyPartPath != null;
         currentFolder = new File(bodyPartPath);
 
         // Set activity title
@@ -135,9 +138,10 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
         // Fill list with corresponding folders
         folders.removeAll(folders);
         File[] subFiles = currentFolder.listFiles();
+        assert subFiles != null;
         if (subFiles.length > 0) {
             for (File f : subFiles) {
-                File imgFile = new File(f.listFiles()[0].getAbsolutePath());
+                File imgFile = new File(Objects.requireNonNull(f.listFiles())[0].getAbsolutePath());
                 Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 folders.add(new RowItem(f.getName(), imgBitmap));
             }
