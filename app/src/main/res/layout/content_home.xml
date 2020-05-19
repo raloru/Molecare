@@ -6,60 +6,83 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <ImageView
-        android:id="@+id/leftLegImage"
-        android:layout_width="96dp"
-        android:layout_height="347dp"
-        android:layout_marginEnd="48dp"
-        app:layout_constraintEnd_toEndOf="@+id/leftArmImage"
-        app:layout_constraintTop_toBottomOf="@+id/torsoImage"
-        app:srcCompat="@drawable/left_leg" />
-
-    <ImageView
-        android:id="@+id/torsoImage"
-        android:layout_width="119dp"
-        android:layout_height="198dp"
-        android:layout_marginTop="4dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="372dp"
+        android:layout_height="704dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headImage"
-        app:srcCompat="@drawable/torso" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageView
-        android:id="@+id/headImage"
-        android:layout_width="109dp"
-        android:layout_height="92dp"
-        android:layout_marginTop="52dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/head" />
+        <ImageView
+            android:id="@+id/torsoImage"
+            android:layout_width="106dp"
+            android:layout_height="170dp"
+            android:layout_marginTop="96dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/headImage"
+            app:srcCompat="@drawable/torso" />
 
-    <ImageView
-        android:id="@+id/leftArmImage"
-        android:layout_width="79dp"
-        android:layout_height="247dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toEndOf="@+id/torsoImage"
-        app:layout_constraintTop_toTopOf="@+id/torsoImage"
-        app:srcCompat="@drawable/left_arm" />
+        <ImageView
+            android:id="@+id/rightArmImage"
+            android:layout_width="110dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="92dp"
+            app:layout_constraintEnd_toEndOf="@+id/torsoImage"
+            app:layout_constraintTop_toTopOf="@+id/headImage"
+            app:srcCompat="@drawable/right_arm" />
 
-    <ImageView
-        android:id="@+id/rightArmImage"
-        android:layout_width="79dp"
-        android:layout_height="246dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/torsoImage"
-        app:layout_constraintTop_toTopOf="@+id/torsoImage"
-        app:srcCompat="@drawable/right_arm" />
+        <ImageView
+            android:id="@+id/leftArmImage"
+            android:layout_width="110dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="92dp"
+            android:layout_marginTop="64dp"
+            app:layout_constraintStart_toStartOf="@+id/torsoImage"
+            app:layout_constraintTop_toTopOf="@+id/headImage"
+            app:srcCompat="@drawable/left_arm" />
 
-    <ImageView
-        android:id="@+id/rightLegImage"
-        android:layout_width="96dp"
-        android:layout_height="347dp"
-        android:layout_marginStart="48dp"
-        app:layout_constraintStart_toStartOf="@+id/rightArmImage"
-        app:layout_constraintTop_toBottomOf="@+id/torsoImage"
-        app:srcCompat="@drawable/right_leg" />
+        <ImageView
+            android:id="@+id/headImage"
+            android:layout_width="140dp"
+            android:layout_height="99dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/head" />
+
+        <ImageView
+            android:id="@+id/leftLegImage"
+            android:layout_width="100dp"
+            android:layout_height="340dp"
+            android:layout_marginTop="140dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginBottom="56dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/leftArmImage"
+            app:layout_constraintTop_toTopOf="@+id/torsoImage"
+            app:layout_constraintVertical_bias="0.636"
+            app:srcCompat="@drawable/left_leg" />
+
+        <ImageView
+            android:id="@+id/rightLegImage"
+            android:layout_width="100dp"
+            android:layout_height="340dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="154dp"
+            android:layout_marginBottom="64dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/rightArmImage"
+            app:layout_constraintTop_toTopOf="@+id/torsoImage"
+            app:layout_constraintVertical_bias="0.7"
+            app:srcCompat="@drawable/right_leg" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

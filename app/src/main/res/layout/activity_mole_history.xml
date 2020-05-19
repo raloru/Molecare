@@ -30,5 +30,24 @@
         android:layout_margin="@dimen/fab_margin"
         android:tint="@android:color/white"
         app:srcCompat="@android:drawable/ic_input_add" />
+    <View
+        android:id="@+id/dummy"
+        android:layout_width="1dp"
+        android:layout_height="16dp"
+        app:layout_anchor="@id/fab"
+        app:layout_anchorGravity="top|right|end" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@android:color/white"
+        app:backgroundTint="#D85D00"
+        app:layout_anchor="@id/dummy"
+        app:layout_anchorGravity="top|right|end"
+        app:srcCompat="?android:attr/actionModeWebSearchDrawable" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

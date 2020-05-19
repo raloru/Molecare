@@ -22,8 +22,8 @@
         <activity
             android:name=".activities.MoleHistoryActivity"
             android:label="@string/title_activity_mole_history"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".activities.CameraActivity"
