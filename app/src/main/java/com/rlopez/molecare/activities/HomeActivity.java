@@ -12,12 +12,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -33,7 +29,7 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Get configuration file and read it
-        configFile = new File(getIntent().getStringExtra("CONFIGURATION_FILE_PATH"));
+        configFile = new File(Objects.requireNonNull(getIntent().getStringExtra("CONFIGURATION_FILE_PATH")));
         configuration = Configuration.readConfigurationJSON(configFile, getApplicationContext());
 
         // Get elements from view

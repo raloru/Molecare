@@ -27,20 +27,21 @@ public class FileManager {
 
     public static void deleteFolderAndChildren(File folder) {
         String[] children = folder.list();
-        for (int i = 0; i < children.length; i++)
-        {
-            new File(folder, children[i]).delete();
+        assert children != null;
+        for (String child : children) {
+            new File(folder, child).delete();
         }
         folder.delete();
     }
 
     public static void deletePhotoFile(File photoFileDelete, File parentFolder, Activity activity) {
         File parent = photoFileDelete.getParentFile();
+        assert parent != null;
         String[] children = parent.list();
-        if(children.length == 2) {
-            for (int i = 0; i < children.length; i++)
-            {
-                new File(parent, children[i]).delete();
+        assert children != null;
+        if (children.length == 2) {
+            for (String child : children) {
+                new File(parent, child).delete();
             }
             parent.delete();
             Toast.makeText(activity.getApplicationContext(), parent.getName() + " " + activity.getString(R.string.deleted), Toast.LENGTH_SHORT).show();

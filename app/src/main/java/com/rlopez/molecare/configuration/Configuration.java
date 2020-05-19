@@ -17,11 +17,6 @@ public class Configuration {
     private Paths paths;
     private ImageConfiguration imageConfiguration;
 
-    public Configuration() {
-        paths = new Paths();
-        imageConfiguration = new ImageConfiguration();
-    }
-
     public Configuration(String imagesPath) {
         paths = new Paths();
         imageConfiguration = new ImageConfiguration();
@@ -39,16 +34,8 @@ public class Configuration {
         return paths;
     }
 
-    public void setPaths(Paths paths) {
-        this.paths = paths;
-    }
-
     public ImageConfiguration getImageConfiguration() {
         return imageConfiguration;
-    }
-
-    public void setImageConfiguration(ImageConfiguration imageConfiguration) {
-        this.imageConfiguration = imageConfiguration;
     }
 
     // Read the configuration JSON and return it as a string
@@ -62,8 +49,7 @@ public class Configuration {
                 jsonContent.append('\n');
             }
             bufferedReader.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Toast.makeText(context, R.string.error_config_file, Toast.LENGTH_SHORT).show();
         }
         Gson gson = new Gson();

@@ -49,7 +49,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CameraActivity extends AppCompatActivity {
@@ -121,7 +121,7 @@ public class CameraActivity extends AppCompatActivity {
             ImageReader reader = ImageReader.newInstance(imageDimensions.getWidth(), imageDimensions.getHeight(), ImageFormat.JPEG, 1);
 
             // List of surfaces for a new capture session (later in code)
-            List<Surface> outputSurfaces = new ArrayList<Surface>(2);
+            List<Surface> outputSurfaces = new ArrayList<>(2);
             outputSurfaces.add(reader.getSurface());
             outputSurfaces.add(new Surface(cameraPreview.getSurfaceTexture()));
 
@@ -135,16 +135,11 @@ public class CameraActivity extends AppCompatActivity {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
                     // Get the last image bytes and save it into a file
-                    Image image = null;
-                    try {
-                        image = reader.acquireLatestImage();
+                    try (Image image = reader.acquireLatestImage()) {
                         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
                         byte[] bytes = new byte[buffer.capacity()];
                         buffer.get(bytes);
                         save(bytes);
-                    } finally {
-                        if (image != null)
-                            image.close();
                     }
                 }
 
@@ -165,6 +160,7 @@ public class CameraActivity extends AppCompatActivity {
                                 outputStream.close();
                             }
                             // Trim the image and rotate it if needed
+                            assert tempPhotoFile != null;
                             Bitmap preProcessedPhoto = ImageProcessor.cropAndRotatePhoto(tempPhotoFile, trimDimension);
                             try (FileOutputStream out = new FileOutputStream(photoFile)) {
                                 preProcessedPhoto.compress(Bitmap.CompressFormat.PNG, 100, out);
@@ -253,6 +249,7 @@ public class CameraActivity extends AppCompatActivity {
                     try {
                         session.capture(captureBuilder.build(), previewSession, handler);
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -271,6 +268,7 @@ public class CameraActivity extends AppCompatActivity {
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
             // Get back camera and its characteristics
+            assert manager != null;
             String cameraId = manager.getCameraIdList()[0];
             characteristics = manager.getCameraCharacteristics(cameraId);
 
@@ -367,6 +365,7 @@ public class CameraActivity extends AppCompatActivity {
 
         // Set buffer size and preview aspect ratio
         StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+        assert map != null;
         imageDimensions = map.getOutputSizes(SurfaceTexture.class)[0];
         if (imageDimensions.getHeight() > imageDimensions.getWidth()) {
             texture.setDefaultBufferSize(imageDimensions.getHeight(), imageDimensions.getWidth());
@@ -385,8 +384,8 @@ public class CameraActivity extends AppCompatActivity {
         // Set central square adjusted dimension
         int imagePixels = imageDimensions.getHeight() * imageDimensions.getWidth();
         int previewPixels = cameraPreview.getHeight() * cameraPreview.getWidth();
-        int trimPixels = trimDimension*trimDimension;
-        int adjustedTrimPixels = previewPixels / (imagePixels/trimPixels);
+        int trimPixels = trimDimension * trimDimension;
+        int adjustedTrimPixels = previewPixels / (imagePixels / trimPixels);
         squareView.getLayoutParams().width = (int) Math.round(Math.sqrt(adjustedTrimPixels));
         squareView.getLayoutParams().height = (int) Math.round(Math.sqrt(adjustedTrimPixels));
 
@@ -401,7 +400,7 @@ public class CameraActivity extends AppCompatActivity {
 
         // Create a capture session and manage configuration
         try {
-            cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
+            cameraDevice.createCaptureSession(Collections.singletonList(surface), new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(CameraCaptureSession session) {
                     captureSession = session;

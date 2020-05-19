@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -28,7 +27,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -44,11 +42,11 @@ public class MoleHistoryActivity extends AppCompatActivity {
 
     List<RowItem> photos;
     CustomArrayAdapter customAdapter;
-            
+
     // To get current configuration
     File configFilePath;
     Configuration configuration;
-            
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,9 +120,9 @@ public class MoleHistoryActivity extends AppCompatActivity {
         photos.removeAll(photos);
         File[] subFiles = moleFolder.listFiles();
         assert subFiles != null;
-        if(subFiles.length > 0) {
+        if (subFiles.length > 0) {
             for (File f : subFiles) {
-                if(!f.getName().contains("json")) {
+                if (!f.getName().contains("json")) {
                     File imgFile = new File(f.getAbsolutePath());
                     Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                     photos.add(new RowItem(f.getName(), imgBitmap));

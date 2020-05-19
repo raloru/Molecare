@@ -3,13 +3,8 @@ package com.rlopez.molecare.images;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Point;
 
 import androidx.exifinterface.media.ExifInterface;
-
-import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
 
 import java.io.File;
 import java.io.IOException;

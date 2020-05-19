@@ -10,12 +10,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 public class ImagesInformation {
 
-    List<ImageModel> imageModels;
+    private List<ImageModel> imageModels;
 
     public ImagesInformation(List<ImageModel> imageModels) {
         this.imageModels = imageModels;
@@ -35,10 +34,9 @@ public class ImagesInformation {
 
     public void deleteImageModel(String name) {
         ImageModel imageModelDelete;
-        Iterator<ImageModel> imageModelsIterator = imageModels.iterator();
-        while(imageModelsIterator.hasNext()) {
-            imageModelDelete = imageModelsIterator.next();
-            if(imageModelDelete.getName().equals(name)) {
+        for (ImageModel imageModel : imageModels) {
+            imageModelDelete = imageModel;
+            if (imageModelDelete.getName().equals(name)) {
                 imageModels.remove(imageModelDelete);
                 break;
             }
@@ -48,11 +46,10 @@ public class ImagesInformation {
     public double getImageFocus(String name) {
         double focus = 0;
         ImageModel imageModel;
-        Iterator<ImageModel> imageModelsIterator = imageModels.iterator();
-        while(imageModelsIterator.hasNext()) {
-            imageModel= imageModelsIterator.next();
-            if(imageModel.getName().equals(name)) {
-                focus = Double.valueOf(imageModel.getFocus());
+        for (ImageModel model : imageModels) {
+            imageModel = model;
+            if (imageModel.getName().equals(name)) {
+                focus = Double.parseDouble(imageModel.getFocus());
                 break;
             }
         }
@@ -70,8 +67,7 @@ public class ImagesInformation {
                 jsonContent.append('\n');
             }
             bufferedReader.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Toast.makeText(context, R.string.error_unexpected, Toast.LENGTH_SHORT).show();
         }
         Gson gson = new Gson();

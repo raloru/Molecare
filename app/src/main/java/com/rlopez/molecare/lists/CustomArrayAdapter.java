@@ -18,7 +18,7 @@ import java.util.List;
 
 public class CustomArrayAdapter extends ArrayAdapter<RowItem> {
 
-    Context context;
+    private Context context;
 
     public CustomArrayAdapter(@NonNull Context context, int resource, @NonNull List<RowItem> items) {
         super(context, resource, items);
@@ -40,7 +40,8 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         // If view doesn't exist, create a new one. If it exists, use it
-        if(view == null) {
+        if (view == null) {
+            assert inflater != null;
             view = inflater.inflate(R.layout.list_item, null);
             holder = new ViewHolder();
             holder.nameView = (TextView) view.findViewById(R.id.itemName);
@@ -50,6 +51,7 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem> {
             holder = (ViewHolder) view.getTag();
         }
 
+        assert item != null;
         holder.nameView.setText(item.getName());
         holder.imageView.setImageBitmap(item.getImage());
 
