@@ -27,6 +27,25 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
+        // Wait 2 seconds and then go to the next activity
+        Thread welcomeThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    super.run();
+                    sleep(2000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    Intent homeIntent = new Intent(WelcomeActivity.this, HomeActivity.class);
+                    homeIntent.putExtra("CONFIGURATION_FILE_PATH", configFile.getAbsolutePath());
+                    startActivity(homeIntent);
+                    finish();
+                }
+            }
+        };
+        welcomeThread.start();
+
         // Create "configuration" and "images" folders if they don't exist
         File configPath = new File(getExternalFilesDir(null), "Config");
         File imagesPath = new File(getExternalFilesDir(null), "Images");
@@ -56,18 +75,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
         // Create necessary folders under Image path
         createFolders(configuration.getPaths().getBodyPartsList());
-
-        // Wait WAIT_TIME_MS and go to home activity
-        // Wait time in milliseconds
-        int WAIT_TIME_MS = 2000;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent homeIntent = new Intent(WelcomeActivity.this, HomeActivity.class);
-                homeIntent.putExtra("CONFIGURATION_FILE_PATH", configFile.getAbsolutePath());
-                startActivity(homeIntent);
-            }
-        }, WAIT_TIME_MS);
 
     }
 
