@@ -1,2 +1,3 @@
 rootProject.name='Molecare'
 include ':app'
+include ':openCVLibrary3410'
