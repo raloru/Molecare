@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -103,7 +104,6 @@ public class CameraActivity extends AppCompatActivity {
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                captureButton.setImageDrawable(getDrawable(R.drawable.shutter_button));
                 takePhoto();
             }
         });
@@ -112,7 +112,11 @@ public class CameraActivity extends AppCompatActivity {
 
     // Take the photo
     private void takePhoto() {
-        Toast.makeText(getApplicationContext(), R.string.photo_processing, Toast.LENGTH_LONG).show();
+
+        // Show a progress dialog
+        final ProgressDialog progressDialog = ProgressDialog.show(CameraActivity.this, getString(R.string.processing),
+                getString(R.string.wait), true);
+
         if (cameraDevice == null) {
             return;
         }
@@ -128,7 +132,12 @@ public class CameraActivity extends AppCompatActivity {
             // Capture builder to build a single capture
             final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
+            //captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AF_MODE_AUTO);
+            //captureBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+            captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_AF_STATE_FOCUSED_LOCKED);
+            captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED);
+
 
             // Set the listener for the image reader
             ImageReader.OnImageAvailableListener imageAvailableListener = new ImageReader.OnImageAvailableListener() {
@@ -165,6 +174,7 @@ public class CameraActivity extends AppCompatActivity {
                             try (FileOutputStream out = new FileOutputStream(photoFile)) {
                                 preProcessedPhoto.compress(Bitmap.CompressFormat.PNG, 100, out);
                                 tempPhotoFile.delete();
+                                progressDialog.dismiss();
                                 Toast.makeText(getApplicationContext(), R.string.photo_saved, Toast.LENGTH_SHORT).show();
                                 CameraActivity.this.finish();
                             } catch (IOException e) {
@@ -423,6 +433,8 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         // Set capture request builder control mode to auto
+        //captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AF_MODE_AUTO);
+        //captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
         captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
 
         // Create a new thread to handle background operations

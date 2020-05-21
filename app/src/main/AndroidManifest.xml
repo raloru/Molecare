@@ -20,6 +20,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.AnalyseActivity"
+            android:label="@string/title_activity_analyse"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
             android:name=".activities.MoleHistoryActivity"
             android:label="@string/title_activity_mole_history"
             android:screenOrientation="portrait"

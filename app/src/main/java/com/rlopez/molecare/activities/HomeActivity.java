@@ -27,7 +27,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        setTitle(R.string.app_name);
         // Get configuration file and read it
         configFile = new File(Objects.requireNonNull(getIntent().getStringExtra("CONFIGURATION_FILE_PATH")));
         configuration = Configuration.readConfigurationJSON(configFile, getApplicationContext());

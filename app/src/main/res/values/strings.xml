@@ -10,6 +10,8 @@
     <string name="right_arm_moles">Right arm moles</string>
     <string name="left_leg_moles">Left leg moles</string>
     <string name="right_leg_moles">Right leg moles</string>
+    <string name="analysis">Analysis</string>
+    <string name="title_activity_analyse">AnalyseActivity</string>
 
     <!-- Permissions -->
     <string name="camera_permission_details">
@@ -29,8 +31,9 @@
     <string name="new_mole_created">Mole created successfully.</string>
     <string name="focus_locked">Focus has been locked</string>
     <string name="focus_unlocked">Focus has been unlocked</string>
-    <string name="photo_processing">Processing photo...</string>
     <string name="photo_saved">The photo has been successfully saved!</string>
+    <string name="deleted"> has been deleted</string>
+
 
     <!-- Dialogs -->
     <string name="title_new_mole">New mole</string>
@@ -44,15 +47,8 @@
     <string name="delete">Delete</string>
     <string name="delete_first_part">Do you want to delete </string>
     <string name="delete_mole_second_part">and all its history?</string>
-    <string name="deleted"> has been deleted</string>
-    <string name="title_activity_analyse">AnalyseActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="wait">Please, wait…</string>
+    <string name="processing">Processing photo</string>
+    <string name="analysing">The photos are being analyzed. Please wait…</string>
 
 </resources>

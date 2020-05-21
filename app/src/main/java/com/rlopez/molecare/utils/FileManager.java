@@ -2,12 +2,16 @@ package com.rlopez.molecare.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.rlopez.molecare.R;
 import com.rlopez.molecare.activities.MoleHistoryActivity;
 import com.rlopez.molecare.images.ImagesInformation;
+
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -29,7 +33,12 @@ public class FileManager {
         String[] children = folder.list();
         assert children != null;
         for (String child : children) {
-            new File(folder, child).delete();
+            File toDelete = new File(folder, child);
+            if(toDelete.isDirectory()) {
+                deleteFolderAndChildren(toDelete);
+            } else {
+                toDelete.delete();
+            }
         }
         folder.delete();
     }
@@ -39,9 +48,14 @@ public class FileManager {
         assert parent != null;
         String[] children = parent.list();
         assert children != null;
-        if (children.length == 2) {
+        if (children.length == 3) {
             for (String child : children) {
-                new File(parent, child).delete();
+                File toDelete = new File(parent, child);
+                if(toDelete.isDirectory()) {
+                    deleteFolderAndChildren(toDelete);
+                } else {
+                    toDelete.delete();
+                }
             }
             parent.delete();
             Toast.makeText(activity.getApplicationContext(), parent.getName() + " " + activity.getString(R.string.deleted), Toast.LENGTH_SHORT).show();
@@ -65,6 +79,12 @@ public class FileManager {
             Toast.makeText(activity.getApplicationContext(), photoFileDelete.getName() + " " + activity.getString(R.string.deleted), Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    // Save a Mat in a file as .jpg
+    public static void saveMatAsFile(Mat mat, String path, String name, Context context) {
+        Toast.makeText(context, path + File.separator + name, Toast.LENGTH_SHORT).show();
+        Imgcodecs.imwrite(path + File.separator + name, mat);
     }
 
 }

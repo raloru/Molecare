@@ -24,7 +24,7 @@
             android:layout_width="300px"
             android:layout_height="300px"
             android:layout_centerInParent="true"
-            app:srcCompat="@drawable/camera_square2"
+            app:srcCompat="@drawable/camera_square"
             tools:ignore="ContentDescription,PxUsage" />
 
     </RelativeLayout>

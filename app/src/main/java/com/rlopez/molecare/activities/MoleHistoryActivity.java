@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -59,7 +60,8 @@ public class MoleHistoryActivity extends AppCompatActivity {
         configuration = Configuration.readConfigurationJSON(configFilePath, getApplicationContext());
 
         // Get elements from view
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton updateFab = findViewById(R.id.fab);
+        FloatingActionButton analyseFab = findViewById(R.id.fab2);
         ListView filesView = findViewById(R.id.photosList);
         Bundle extras = getIntent().getExtras();
 
@@ -68,6 +70,8 @@ public class MoleHistoryActivity extends AppCompatActivity {
         molePath = extras.getString("MOLE_PATH");
         assert molePath != null;
         moleFolder = new File(molePath);
+
+        setTitle(moleFolder.getName());
 
         // Fill list with corresponding image files
         photos = new ArrayList<>();
@@ -108,25 +112,47 @@ public class MoleHistoryActivity extends AppCompatActivity {
             }
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        updateFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 checkCameraPermission();
+            }
+        });
+
+        analyseFab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MoleHistoryActivity.this, AnalyseActivity.class);
+                intent.putExtra("CONFIGURATION_FILE_PATH", configFilePath.getAbsolutePath());
+                intent.putExtra("MOLE_PATH", molePath);
+                startActivity(intent);
             }
         });
     }
 
     private void getPhotos() {
+        // Create new filename filter
+        FilenameFilter fileNameFilter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                if (name.lastIndexOf('.') > 0) {
+                    // Get last index for '.' char
+                    int lastIndex = name.lastIndexOf('.');
+                    // Get extension
+                    String str = name.substring(lastIndex);
+                    // Keep jpg files
+                    return str.equals(".jpg");
+                }
+                return false;
+            }
+        };
+
         // Fill list with corresponding photos
         photos.removeAll(photos);
-        File[] subFiles = moleFolder.listFiles();
+        File[] subFiles = moleFolder.listFiles(fileNameFilter);
         assert subFiles != null;
         if (subFiles.length > 0) {
             for (File f : subFiles) {
-                if (!f.getName().contains("json")) {
-                    File imgFile = new File(f.getAbsolutePath());
-                    Bitmap imgBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                    photos.add(new RowItem(f.getName(), imgBitmap));
-                }
+                Bitmap imgBitmap = BitmapFactory.decodeFile(f.getAbsolutePath());
+                photos.add(new RowItem(f.getName(), imgBitmap));
             }
         }
     }
