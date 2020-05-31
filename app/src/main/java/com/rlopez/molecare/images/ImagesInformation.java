@@ -49,7 +49,7 @@ public class ImagesInformation {
         for (ImageModel model : imageModels) {
             imageModel = model;
             if (imageModel.getName().equals(name)) {
-                focus = Double.parseDouble(imageModel.getFocus());
+                focus = Double.parseDouble(imageModel.getFocusDistance());
                 break;
             }
         }

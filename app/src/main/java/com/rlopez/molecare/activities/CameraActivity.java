@@ -132,8 +132,8 @@ public class CameraActivity extends AppCompatActivity {
             // Capture builder to build a single capture
             final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
-            //captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AF_MODE_AUTO);
-            //captureBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
+            captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AF_MODE_AUTO);
+            captureBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_AF_STATE_FOCUSED_LOCKED);
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED);
@@ -219,7 +219,7 @@ public class CameraActivity extends AppCompatActivity {
 
                     // Save the focus used to take the photo into a JSON file
                     File imagesInformationFile = new File(moleFolder.getAbsolutePath(), "ImagesInformation.json");
-                    ImageModel imageModel = new ImageModel(photoFile.getName(), String.valueOf(result.get(CaptureResult.LENS_FOCUS_DISTANCE)));
+                    ImageModel imageModel = new ImageModel(photoFile.getName(), String.valueOf(result.get(CaptureResult.LENS_FOCUS_DISTANCE)), String.valueOf(result.get(CaptureResult.LENS_FOCAL_LENGTH)));
                     Gson gson = new Gson();
                     if (!imagesInformationFile.exists()) {
                         try {
@@ -385,12 +385,6 @@ public class CameraActivity extends AppCompatActivity {
             cameraPreview.setAspectRatio(imageDimensions.getHeight(), imageDimensions.getWidth());
         }
 
-        // Set central square dimension
-        /*int dimensionFactor = (imageDimensions.getHeight() * imageDimensions.getWidth()) / (cameraPreview.getHeight() * cameraPreview.getWidth());
-        int newSquareSideDimension = (trimDimension / dimensionFactor);
-        squareView.getLayoutParams().width = newSquareSideDimension;
-        squareView.getLayoutParams().height = newSquareSideDimension;*/
-
         // Set central square adjusted dimension
         int imagePixels = imageDimensions.getHeight() * imageDimensions.getWidth();
         int previewPixels = cameraPreview.getHeight() * cameraPreview.getWidth();
@@ -433,8 +427,8 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         // Set capture request builder control mode to auto
-        //captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AF_MODE_AUTO);
-        //captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AF_MODE_AUTO);
+        captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
         captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
 
         // Create a new thread to handle background operations

@@ -2,13 +2,13 @@ package com.rlopez.molecare.activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.rlopez.molecare.R;
 import com.rlopez.molecare.configuration.Configuration;
+import com.rlopez.molecare.images.MoleProcessor;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
@@ -19,20 +19,21 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.rlopez.molecare.utils.FileManager.saveMatAsFile;
-
 public class AnalyseActivity extends AppCompatActivity {
 
     // Mole path and folder
     private String molePath;
     private File moleFolder;
-    private File processedImagesFolder;
+    private String binaryPath;
+    private String segmentedPath;
 
     // To get current configuration
     File configFilePath;
     Configuration configuration;
 
     List<Mat> images;
+    List<Mat> binarySegmentedMoles;
+    List<Mat> colouredSegmentedMoles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,8 @@ public class AnalyseActivity extends AppCompatActivity {
         OpenCVLoader.initDebug();
 
         images = new ArrayList<>();
+        binarySegmentedMoles = new ArrayList<>();
+        colouredSegmentedMoles = new ArrayList<>();
 
         // Set parent path and current folder
         Bundle extras = getIntent().getExtras();
@@ -52,6 +55,8 @@ public class AnalyseActivity extends AppCompatActivity {
         molePath = extras.getString("MOLE_PATH");
         assert molePath != null;
         moleFolder = new File(molePath);
+        binaryPath = moleFolder.getAbsolutePath() + File.separator + "binary";
+        segmentedPath = moleFolder.getAbsolutePath() + File.separator + "coloured";
 
         setTitle(getString(R.string.analysis) + ": " + moleFolder.getName());
 
@@ -75,18 +80,16 @@ public class AnalyseActivity extends AppCompatActivity {
             }
         };
 
-        // Create a folder for the processed images if it doesn't exist
-        processedImagesFolder = new File(moleFolder, "processed");
-        processedImagesFolder.mkdirs();
-
         // Get the original images in a mat list
         File[] originalImages = moleFolder.listFiles(fileNameFilter);
         assert originalImages != null;
         if (originalImages.length > 0) {
             for (File f : originalImages) {
-                Mat mat;
-                mat = Imgcodecs.imread(f.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
-                saveMatAsFile(mat, moleFolder.getAbsolutePath() + File.separator + "processed", f.getName(), getApplicationContext());
+                Mat originalMat;
+                // Read the original image
+                originalMat = Imgcodecs.imread(f.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
+                // Get the binary and coloured segmented images and save them
+                MoleProcessor.segmentMole(originalMat, binaryPath, segmentedPath, f.getName());
             }
         }
 

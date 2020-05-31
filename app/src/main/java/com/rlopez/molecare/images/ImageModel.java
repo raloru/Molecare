@@ -3,11 +3,13 @@ package com.rlopez.molecare.images;
 public class ImageModel {
 
     private String name;
-    private String focus;
+    private String focusDistance;
+    private String focalLength;
 
-    public ImageModel(String name, String focus) {
+    public ImageModel(String name, String focusDistance, String focalLength) {
         this.name = name;
-        this.focus = focus;
+        this.focusDistance = focusDistance;
+        this.focalLength = focalLength;
     }
 
     public String getName() {
@@ -18,11 +20,19 @@ public class ImageModel {
         this.name = name;
     }
 
-    public String getFocus() {
-        return focus;
+    public String getFocusDistance() {
+        return focusDistance;
     }
 
-    public void setFocus(String focus) {
-        this.focus = focus;
+    public void setFocusDistance(String focusDistance) {
+        this.focusDistance = focusDistance;
+    }
+
+    public String getFocalLength() {
+        return focalLength;
+    }
+
+    public void setFocalLength(String focalLength) {
+        this.focalLength = focalLength;
     }
 }

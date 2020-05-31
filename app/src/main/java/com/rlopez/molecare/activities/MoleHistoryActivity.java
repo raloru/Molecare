@@ -71,6 +71,12 @@ public class MoleHistoryActivity extends AppCompatActivity {
         assert molePath != null;
         moleFolder = new File(molePath);
 
+        // Create folders for the processed images if they don't exist
+        File binaryImagesFolder = new File(moleFolder, "binary");
+        File colouredImagesFolder = new File(moleFolder, "coloured");
+        binaryImagesFolder.mkdirs();
+        colouredImagesFolder.mkdirs();
+
         setTitle(moleFolder.getName());
 
         // Fill list with corresponding image files

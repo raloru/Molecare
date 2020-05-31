@@ -29,6 +29,7 @@ public class FileManager {
         return File.createTempFile(imageName, ".jpg", currentFolder);
     }
 
+    // Delete a mole folder and all the content inside
     public static void deleteFolderAndChildren(File folder) {
         String[] children = folder.list();
         assert children != null;
@@ -43,12 +44,13 @@ public class FileManager {
         folder.delete();
     }
 
+    // Delete an original mole photo and its associated images
     public static void deletePhotoFile(File photoFileDelete, File parentFolder, Activity activity) {
         File parent = photoFileDelete.getParentFile();
         assert parent != null;
         String[] children = parent.list();
         assert children != null;
-        if (children.length == 3) {
+        if (children.length == 4) {
             for (String child : children) {
                 File toDelete = new File(parent, child);
                 if(toDelete.isDirectory()) {
@@ -75,16 +77,14 @@ public class FileManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            File binary = new File(parent + File.separator + "binary", photoFileDelete.getName());
+            File coloured = new File(parent + File.separator + "coloured", photoFileDelete.getName());
             photoFileDelete.delete();
+            binary.delete();
+            coloured.delete();
             Toast.makeText(activity.getApplicationContext(), photoFileDelete.getName() + " " + activity.getString(R.string.deleted), Toast.LENGTH_SHORT).show();
         }
 
-    }
-
-    // Save a Mat in a file as .jpg
-    public static void saveMatAsFile(Mat mat, String path, String name, Context context) {
-        Toast.makeText(context, path + File.separator + name, Toast.LENGTH_SHORT).show();
-        Imgcodecs.imwrite(path + File.separator + name, mat);
     }
 
 }
