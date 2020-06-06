@@ -6,6 +6,9 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 import com.rlopez.molecare.R;
 import com.rlopez.molecare.configuration.Configuration;
 import com.rlopez.molecare.images.ImagesInformation;
@@ -48,6 +51,9 @@ public class AnalyseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_analyse);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Get elements from view
+        GraphView graph = findViewById(R.id.size_graph);
 
         // Init OpenCV
         OpenCVLoader.initDebug();
@@ -114,6 +120,19 @@ public class AnalyseActivity extends AppCompatActivity {
                 moles.add(moleModel);
             }
         }
+
+        // Get moles characteristics
+        MoleProcessor.getMolesCharacteristics(moles);
+
+        ListIterator<MoleModel> iterator = moles.listIterator();
+
+        // Fill the size graph
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
+                new DataPoint(1, 0),
+                new DataPoint(2, iterator.next().getDiameter()),
+                new DataPoint(3, iterator.next().getDiameter())
+        });
+        graph.addSeries(series);
 
         progressDialog.dismiss();
     }

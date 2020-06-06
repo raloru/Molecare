@@ -1,18 +1,18 @@
 package com.rlopez.molecare.images;
 
-import com.rlopez.molecare.models.ImageModel;
 import com.rlopez.molecare.models.MoleModel;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.File;
 import java.util.List;
+import java.util.ListIterator;
 
 public class MoleProcessor {
+
+    private static final double INCH_TO_CM = 2.54;
 
     // Segment image to get only the mole zone, obtaining a binary mat
     public static void segmentMole(MoleModel mole) {
@@ -24,7 +24,7 @@ public class MoleProcessor {
         Imgproc.cvtColor(srcMat, auxMat, Imgproc.COLOR_RGB2HSV);
         //Imgcodecs.imwrite(savingPath + File.separator + "hsv.jpg", auxMat);
         // Raise the contrast to highlight the mole
-        auxMat.convertTo(auxMat , -1, 2, 0);
+        auxMat.convertTo(auxMat, -1, 2, 0);
         //Imgcodecs.imwrite(savingPath + File.separator + "contrast.jpg", auxMat);
         // Convert to GRAY scale to facilitate segmentation
         Imgproc.cvtColor(auxMat, auxMat, Imgproc.COLOR_RGB2GRAY);
@@ -43,21 +43,36 @@ public class MoleProcessor {
         mole.saveSegmentedImages();
     }
 
-    // Calculate average % of size changes
-    public static double compareMolesSize(List<Mat> srcMats) {
+    // Get the moles characteristics (diameter, hue and shape)
+    public static void getMolesCharacteristics(List<MoleModel> moles) {
+        for (MoleModel currentMole : moles) {
+            calculateMoleDiameter(currentMole);
+        }
+    }
+
+    // Calculate the mole diameter
+    private static void calculateMoleDiameter(MoleModel mole) {
+        double realDiameter;
+        double dpi = mole.getDpi();
+        double distance = 1 / mole.getFocusDistance();
+        // Diameter = Perimeter / PI
+        double imageDiameterInPixels = Core.countNonZero(mole.getBinarySegmentedImage()) / Math.PI;
+        // dpi = dots per inch, 1 inch = 2.54cm
+        double imageDiameter = imageDiameterInPixels * INCH_TO_CM / dpi;
+        // object size in image = focal length * object size / object distance
+        // object size = object size in image * object distance / focal length
+        realDiameter = imageDiameter * distance / mole.getFocalLength();
+        mole.setDiameter(realDiameter);
+    }
+
+    // Calculate the mole hue
+    private static double getMoleHue(Mat srcMat) {
         // TODO
-        int molePixels = Core.countNonZero(srcMats.get(0));
         return 0.0;
     }
 
-    // Calculate average % of color changes
-    public static double compareMolesColor(List<Mat> srcMats) {
-        // TODO
-        return 0.0;
-    }
-
-    // Calculate an average % of shape changes
-    public static double compareMolesShape(List<Mat> srcMats) {
+    // Calculate the mole shape
+    private static double getMoleShape(Mat srcMat) {
         // TODO
         return 0.0;
     }

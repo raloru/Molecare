@@ -21,6 +21,7 @@ public class MoleModel {
     private Mat binarySegmentedImage;
     private Mat colouredSegmentedImage;
     private String path;
+    private double diameter;
 
     public MoleModel(String name, String focusDistance, String focalLength, Double dpi, Mat originalImage, String path) {
         this.name = name;
@@ -102,6 +103,14 @@ public class MoleModel {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public double getDiameter() {
+        return diameter;
+    }
+
+    public void setDiameter(double diameter) {
+        this.diameter = diameter;
     }
 
     @SuppressLint("SimpleDateFormat")
