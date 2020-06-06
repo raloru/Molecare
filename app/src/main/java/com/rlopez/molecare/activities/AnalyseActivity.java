@@ -8,7 +8,10 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.rlopez.molecare.R;
 import com.rlopez.molecare.configuration.Configuration;
+import com.rlopez.molecare.images.ImagesInformation;
 import com.rlopez.molecare.images.MoleProcessor;
+import com.rlopez.molecare.models.ImageModel;
+import com.rlopez.molecare.models.MoleModel;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
@@ -17,23 +20,27 @@ import org.opencv.imgcodecs.Imgcodecs;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Objects;
 
 public class AnalyseActivity extends AppCompatActivity {
 
     // Mole path and folder
     private String molePath;
     private File moleFolder;
-    private String binaryPath;
-    private String segmentedPath;
 
     // To get current configuration
     File configFilePath;
     Configuration configuration;
 
+    // To get images information
+    private ImagesInformation imagesInformation;
+    private List<ImageModel> imageModels;
+
     List<Mat> images;
-    List<Mat> binarySegmentedMoles;
-    List<Mat> colouredSegmentedMoles;
+    List<MoleModel> moles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +52,14 @@ public class AnalyseActivity extends AppCompatActivity {
         // Init OpenCV
         OpenCVLoader.initDebug();
 
+        // Get configuration file and read it
+        configFilePath = new File(Objects.requireNonNull(getIntent().getStringExtra("CONFIGURATION_FILE_PATH")));
+        configuration = Configuration.readConfigurationJSON(configFilePath, getApplicationContext());
+
+        // Initialize lists
         images = new ArrayList<>();
-        binarySegmentedMoles = new ArrayList<>();
-        colouredSegmentedMoles = new ArrayList<>();
+        moles = new ArrayList<>();
+        imageModels = new ArrayList<>();
 
         // Set parent path and current folder
         Bundle extras = getIntent().getExtras();
@@ -55,8 +67,10 @@ public class AnalyseActivity extends AppCompatActivity {
         molePath = extras.getString("MOLE_PATH");
         assert molePath != null;
         moleFolder = new File(molePath);
-        binaryPath = moleFolder.getAbsolutePath() + File.separator + "binary";
-        segmentedPath = moleFolder.getAbsolutePath() + File.separator + "coloured";
+
+        // Read images information
+        imagesInformation = ImagesInformation.readImagesInformationJSON(new File(moleFolder, "ImagesInformation.json"), getApplicationContext());
+        imageModels = imagesInformation.getImageModels();
 
         setTitle(getString(R.string.analysis) + ": " + moleFolder.getName());
 
@@ -85,11 +99,19 @@ public class AnalyseActivity extends AppCompatActivity {
         assert originalImages != null;
         if (originalImages.length > 0) {
             for (File f : originalImages) {
-                Mat originalMat;
-                // Read the original image
-                originalMat = Imgcodecs.imread(f.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
+                ImageModel imageModel = null;
+                while (imageModels.iterator().hasNext()) {
+                    imageModel = imageModels.iterator().next();
+                    if (imageModel.getName().equals(f.getName())) {
+                        break;
+                    }
+                }
+                MoleModel moleModel = new MoleModel(imageModel.getName(), imageModel.getFocusDistance(), imageModel.getFocalLength(), 96.0,
+                        Imgcodecs.imread(f.getAbsolutePath(), Imgcodecs.IMREAD_COLOR), f.getAbsolutePath());
                 // Get the binary and coloured segmented images and save them
-                MoleProcessor.segmentMole(originalMat, binaryPath, segmentedPath, f.getName());
+                MoleProcessor.segmentMole(moleModel);
+                // Add the new mole to the moles list
+                moles.add(moleModel);
             }
         }
 

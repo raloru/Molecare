@@ -1,5 +1,8 @@
 package com.rlopez.molecare.images;
 
+import com.rlopez.molecare.models.ImageModel;
+import com.rlopez.molecare.models.MoleModel;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -12,7 +15,8 @@ import java.util.List;
 public class MoleProcessor {
 
     // Segment image to get only the mole zone, obtaining a binary mat
-    public static void segmentMole(Mat srcMat, String binaryPath, String segmentedPath, String moleName) {
+    public static void segmentMole(MoleModel mole) {
+        Mat srcMat = mole.getOriginalImage();
         Mat auxMat = new Mat();
         Mat binarySegmentedMat = new Mat();
         Mat colouredSegmentedMat = new Mat();
@@ -33,8 +37,10 @@ public class MoleProcessor {
         // Get the coloured segmented image applying binary image as a mask to the original image
         srcMat.copyTo(colouredSegmentedMat, binarySegmentedMat);
         // Save both binary and coloured segmented images
-        Imgcodecs.imwrite(binaryPath + File.separator + moleName, binarySegmentedMat);
-        Imgcodecs.imwrite(segmentedPath + File.separator + moleName, colouredSegmentedMat);
+        mole.setBinarySegmentedImage(binarySegmentedMat);
+        mole.setColouredSegmentedImage(colouredSegmentedMat);
+        // Save segmented mats
+        mole.saveSegmentedImages();
     }
 
     // Calculate average % of size changes

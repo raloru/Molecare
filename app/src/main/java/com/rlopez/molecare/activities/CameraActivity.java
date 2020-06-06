@@ -40,7 +40,7 @@ import com.rlopez.molecare.configuration.Configuration;
 import com.rlopez.molecare.utils.AutoFitTextureView;
 import com.rlopez.molecare.images.ImageProcessor;
 import com.rlopez.molecare.utils.FileManager;
-import com.rlopez.molecare.images.ImageModel;
+import com.rlopez.molecare.models.ImageModel;
 import com.rlopez.molecare.images.ImagesInformation;
 
 import java.io.File;
