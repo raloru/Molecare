@@ -44,19 +44,6 @@ public class ImagesInformation {
         }
     }
 
-    public double getImageFocus(String name) {
-        double focus = 0;
-        ImageModel imageModel;
-        for (ImageModel model : imageModels) {
-            imageModel = model;
-            if (imageModel.getName().equals(name)) {
-                focus = Double.parseDouble(imageModel.getFocusDistance());
-                break;
-            }
-        }
-        return focus;
-    }
-
     // Read the configuration JSON and return it as a string
     public static ImagesInformation readImagesInformationJSON(File imagesInformationFile, Context context) {
         StringBuilder jsonContent = new StringBuilder();

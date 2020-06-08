@@ -16,18 +16,23 @@ public class MoleModel {
     private Date date;
     private Double focusDistance;
     private Double focalLength;
+    private Double sensorHeight;
     private Double dpi;
+    private Double originalImageHeight;
     private Mat originalImage;
     private Mat binarySegmentedImage;
     private Mat colouredSegmentedImage;
     private String path;
     private double diameter;
+    private double hue;
 
-    public MoleModel(String name, String focusDistance, String focalLength, Double dpi, Mat originalImage, String path) {
+    public MoleModel(String name, String focusDistance, String focalLength, String sensorHeight, String originalImageHeight, Double dpi, Mat originalImage, String path) {
         this.name = name;
         this.date = getDateFromName(name);
         this.focusDistance = Double.parseDouble(focusDistance);
         this.focalLength = Double.parseDouble(focalLength);
+        this.sensorHeight = Double.parseDouble(sensorHeight);
+        this.originalImageHeight = Double.parseDouble(originalImageHeight);
         this.dpi = dpi;
         this.originalImage = originalImage;
         this.path = path;
@@ -111,6 +116,30 @@ public class MoleModel {
 
     public void setDiameter(double diameter) {
         this.diameter = diameter;
+    }
+
+    public double getHue() {
+        return hue;
+    }
+
+    public void setHue(double hue) {
+        this.hue = hue;
+    }
+
+    public Double getSensorHeight() {
+        return sensorHeight;
+    }
+
+    public void setSensorHeight(Double sensorHeight) {
+        this.sensorHeight = sensorHeight;
+    }
+
+    public Double getOriginalImageHeight() {
+        return originalImageHeight;
+    }
+
+    public void setOriginalImageHeight(Double originalImageHeight) {
+        this.originalImageHeight = originalImageHeight;
     }
 
     @SuppressLint("SimpleDateFormat")

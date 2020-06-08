@@ -5,11 +5,15 @@ public class ImageModel {
     private String name;
     private String focusDistance;
     private String focalLength;
+    private String sensorHeight;
+    private String originalImageHeight;
 
-    public ImageModel(String name, String focusDistance, String focalLength) {
+    public ImageModel(String name, String focusDistance, String focalLength, String sensorHeight, String originalImageHeight) {
         this.name = name;
         this.focusDistance = focusDistance;
         this.focalLength = focalLength;
+        this.sensorHeight = sensorHeight;
+        this.originalImageHeight = originalImageHeight;
     }
 
     public String getName() {
@@ -34,5 +38,21 @@ public class ImageModel {
 
     public void setFocalLength(String focalLength) {
         this.focalLength = focalLength;
+    }
+
+    public String getSensorHeight() {
+        return sensorHeight;
+    }
+
+    public void setSensorHeight(String sensorHeight) {
+        this.sensorHeight = sensorHeight;
+    }
+
+    public String getOriginalImageHeight() {
+        return originalImageHeight;
+    }
+
+    public void setOriginalImageHeight(String originalImageHeight) {
+        this.originalImageHeight = originalImageHeight;
     }
 }

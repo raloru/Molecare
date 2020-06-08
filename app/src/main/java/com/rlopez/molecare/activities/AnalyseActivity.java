@@ -23,9 +23,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Objects;
 
 public class AnalyseActivity extends AppCompatActivity {
@@ -53,7 +51,8 @@ public class AnalyseActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Get elements from view
-        GraphView graph = findViewById(R.id.size_graph);
+        GraphView diametersGraph = findViewById(R.id.diameters_graph);
+        GraphView huesGraph = findViewById(R.id.hues_graph);
 
         // Init OpenCV
         OpenCVLoader.initDebug();
@@ -100,41 +99,82 @@ public class AnalyseActivity extends AppCompatActivity {
             }
         };
 
-        // Get the original images in a mat list
+        // Get the saved mole images and process them
         File[] originalImages = moleFolder.listFiles(fileNameFilter);
         assert originalImages != null;
         if (originalImages.length > 0) {
             for (File f : originalImages) {
-                ImageModel imageModel = null;
-                while (imageModels.iterator().hasNext()) {
-                    imageModel = imageModels.iterator().next();
+                for (ImageModel imageModel : imageModels) {
                     if (imageModel.getName().equals(f.getName())) {
-                        break;
+                        // New mole model
+                        MoleModel moleModel = new MoleModel(imageModel.getName(), imageModel.getFocusDistance(), imageModel.getFocalLength(),
+                                imageModel.getSensorHeight(), imageModel.getOriginalImageHeight(), 96.0,
+                                Imgcodecs.imread(f.getAbsolutePath(), Imgcodecs.IMREAD_COLOR), f.getAbsolutePath());
+                        // Get the binary and coloured segmented images and save them
+                        MoleProcessor.segmentMole(moleModel);
+                        // Add the new mole to the moles list
+                        moles.add(moleModel);
                     }
                 }
-                MoleModel moleModel = new MoleModel(imageModel.getName(), imageModel.getFocusDistance(), imageModel.getFocalLength(), 96.0,
-                        Imgcodecs.imread(f.getAbsolutePath(), Imgcodecs.IMREAD_COLOR), f.getAbsolutePath());
-                // Get the binary and coloured segmented images and save them
-                MoleProcessor.segmentMole(moleModel);
-                // Add the new mole to the moles list
-                moles.add(moleModel);
             }
+
+            // Get moles characteristics
+            MoleProcessor.getMolesCharacteristics(moles);
+
+            // Create (date, diameter) data points and fill the corresponding graph
+            DataPoint[] diameterDataPoints = new DataPoint[moles.size()];
+            DataPoint[] hueDataPoints = new DataPoint[moles.size()];
+            double maxDiameter = 0.0;
+            double minHue = Double.MAX_VALUE;
+            double maxHue = 0.0;
+            for(int i = 0; i < moles.size(); i++) {
+                diameterDataPoints[i] = new DataPoint(i, moles.get(i).getDiameter());
+                hueDataPoints[i] = new DataPoint(i, moles.get(i).getHue());
+                if(moles.get(i).getDiameter() > maxDiameter) {
+                    maxDiameter = moles.get(i).getDiameter();
+                }
+                if(moles.get(i).getHue() > maxHue) {
+                    maxHue = moles.get(i).getHue();
+                }
+                if (moles.get(i).getHue() < minHue) {
+                    minHue = moles.get(i).getHue();
+                }
+
+            }
+
+            // Fill diameters and hues graph
+            fillGraph(diameterDataPoints, diametersGraph, 0.0, maxDiameter, true);
+            fillGraph(hueDataPoints, huesGraph, minHue, maxHue, false);
+
         }
 
-        // Get moles characteristics
-        MoleProcessor.getMolesCharacteristics(moles);
-
-        ListIterator<MoleModel> iterator = moles.listIterator();
-
-        // Fill the size graph
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                new DataPoint(1, 0),
-                new DataPoint(2, iterator.next().getDiameter()),
-                new DataPoint(3, iterator.next().getDiameter())
-        });
-        graph.addSeries(series);
-
         progressDialog.dismiss();
+    }
+
+    private void fillGraph(DataPoint[] data, GraphView graph, double minValue, double maxValue, boolean diameter) {
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(data);
+        series.setDrawDataPoints(true);
+        series.setThickness(6);
+
+        graph.addSeries(series);
+        // Set max and min axis values
+        graph.getViewport().setMinY(0);
+        if(diameter) {
+            graph.getViewport().setMinY(0);
+            graph.getViewport().setMaxY(Math.round(maxValue) + 5);
+            graph.getViewport().setMinX(0);
+            graph.getViewport().setMaxX(moles.size());
+            graph.getViewport().setYAxisBoundsManual(true);
+            graph.getViewport().setXAxisBoundsManual(true);
+        } else {
+            graph.getViewport().setMinY(Math.round(minValue) - 15);
+            graph.getViewport().setMaxY(Math.round(maxValue) + 15);
+            graph.getViewport().setMinX(0);
+            graph.getViewport().setMaxX(moles.size());
+            graph.getViewport().setYAxisBoundsManual(true);
+            graph.getViewport().setXAxisBoundsManual(true);
+        }
+
     }
 
 }

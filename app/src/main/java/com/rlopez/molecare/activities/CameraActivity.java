@@ -53,6 +53,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static android.hardware.camera2.CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE;
+
 public class CameraActivity extends AppCompatActivity {
 
     private Size imageDimensions;
@@ -219,7 +221,9 @@ public class CameraActivity extends AppCompatActivity {
 
                     // Save the focus used to take the photo into a JSON file
                     File imagesInformationFile = new File(moleFolder.getAbsolutePath(), "ImagesInformation.json");
-                    ImageModel imageModel = new ImageModel(photoFile.getName(), String.valueOf(result.get(CaptureResult.LENS_FOCUS_DISTANCE)), String.valueOf(result.get(CaptureResult.LENS_FOCAL_LENGTH)));
+                    ImageModel imageModel = new ImageModel(photoFile.getName(), String.valueOf(result.get(CaptureResult.LENS_FOCUS_DISTANCE)),
+                            String.valueOf(result.get(CaptureResult.LENS_FOCAL_LENGTH)), String.valueOf(characteristics.get(SENSOR_INFO_PHYSICAL_SIZE).getHeight()),
+                            String.valueOf(imageDimensions.getHeight()));
                     Gson gson = new Gson();
                     if (!imagesInformationFile.exists()) {
                         try {

@@ -7,14 +7,26 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <com.jjoe64.graphview.GraphView
-        android:id="@+id/size_graph"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:id="@+id/diameters_graph"
+        android:layout_width="358dp"
+        android:layout_height="286dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="64dp"
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/hues_graph"
+        android:layout_width="356dp"
+        android:layout_height="282dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="400dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
