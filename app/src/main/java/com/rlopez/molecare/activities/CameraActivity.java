@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -158,11 +159,10 @@ public class CameraActivity extends AppCompatActivity {
                 void save(byte[] bytes) {
                     // Save bytes to the new photo file
                     OutputStream outputStream = null;
-                    File tempPhotoFile = null;
                     try {
-                        tempPhotoFile = FileManager.createTempPhotoFile(moleFolder.getAbsolutePath());
-                        outputStream = new FileOutputStream(tempPhotoFile);
-                        outputStream.write(bytes);
+                        outputStream = new FileOutputStream(photoFile);
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        ImageProcessor.cropAndRotateBitmap(bitmap, trimDimension).compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                     } catch (IOException e) {
                         Toast.makeText(getApplicationContext(), R.string.error_creating_file, Toast.LENGTH_SHORT).show();
                     } finally {
@@ -170,6 +170,8 @@ public class CameraActivity extends AppCompatActivity {
                             if (outputStream != null) {
                                 outputStream.close();
                             }
+                            CameraActivity.this.finish();
+                            /*
                             // Trim the image and rotate it if needed
                             assert tempPhotoFile != null;
                             Bitmap preProcessedPhoto = ImageProcessor.cropAndRotatePhoto(tempPhotoFile, trimDimension);
@@ -181,7 +183,7 @@ public class CameraActivity extends AppCompatActivity {
                                 CameraActivity.this.finish();
                             } catch (IOException e) {
                                 e.printStackTrace();
-                            }
+                            }*/
 
                         } catch (IOException e) {
                             Toast.makeText(getApplicationContext(), R.string.error_creating_file, Toast.LENGTH_SHORT).show();
