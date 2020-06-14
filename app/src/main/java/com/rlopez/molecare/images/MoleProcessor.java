@@ -14,8 +14,6 @@ import java.util.ListIterator;
 
 public class MoleProcessor {
 
-    private static final double INCH_TO_MM = 25.4;
-
     // Segment image to get only the mole zone, obtaining a binary mat
     public static void segmentMole(MoleModel mole) {
         Mat srcMat = mole.getOriginalImage();
@@ -23,18 +21,11 @@ public class MoleProcessor {
         Mat binarySegmentedMat = new Mat();
         Mat colouredSegmentedMat = new Mat();
         // Convert image to HSV to practically remove airs
-        //srcMat.convertTo(auxMat, -1, 3.5, 0);
         Imgproc.cvtColor(srcMat, auxMat, Imgproc.COLOR_RGB2HSV);
-        //Imgcodecs.imwrite(savingPath + File.separator + "hsv.jpg", auxMat);
-        // Raise the contrast to highlight the mole
-
-        //Imgcodecs.imwrite(savingPath + File.separator + "contrast.jpg", auxMat);
         // Convert to GRAY scale to facilitate segmentation
         Imgproc.cvtColor(auxMat, auxMat, Imgproc.COLOR_RGB2GRAY);
-        //Imgcodecs.imwrite(savingPath + File.separator + "gray.jpg", auxMat);
         // Apply a gaussian blur to eliminate the remaining hairs
         Imgproc.GaussianBlur(auxMat, auxMat, new Size(19, 19), 0);
-        //Imgcodecs.imwrite(savingPath + File.separator + "blur.jpg", auxMat);
         // Apply threshold algorithm to segment, obtaining a binary image
         Imgproc.threshold(auxMat, binarySegmentedMat, 0, 255, Imgproc.THRESH_BINARY + Imgproc.THRESH_OTSU);
         // Get the coloured segmented image applying binary image as a mask to the original image
@@ -48,25 +39,28 @@ public class MoleProcessor {
 
     // Get the moles characteristics (diameter, hue and shape)
     public static void getMolesCharacteristics(List<MoleModel> moles) {
+        Mat referenceBinaryMat = moles.get(0).getBinarySegmentedImage();
         for (MoleModel currentMole : moles) {
             calculateMoleDiameter(currentMole);
             calculateMoleHue(currentMole);
+            calculateShapeCorrelation(referenceBinaryMat, currentMole);
         }
     }
 
     // Calculate the mole diameter
     private static void calculateMoleDiameter(MoleModel mole) {
-        double realDiameterInPixels;
+        double realDiameterInMm;
+        double imageDiameterInPixels;
+        double distance;
         // Focus distance is given in diopters. 1 diopter = 1/1m
-        double distance = (1 / mole.getFocusDistance()) * 1000;
+        distance = (1 / mole.getFocusDistance()) * 1000;
         // Area = PI * D^2 / 4
-        double imageDiameterInPixels = Math.sqrt(Core.countNonZero(mole.getBinarySegmentedImage()) * 4 / Math.PI) ;
+        imageDiameterInPixels = Math.sqrt(Core.countNonZero(mole.getBinarySegmentedImage()) * 4 / Math.PI) ;
         // Real height (px) = distance (mm) * object height (px) * sensor height (mm) / (focal length (mm) * original image height (px))
-        realDiameterInPixels = (distance * imageDiameterInPixels * mole.getSensorHeight()) / (mole.getFocalLength() * mole.getOriginalImageHeight());
+        realDiameterInMm = (distance * imageDiameterInPixels * mole.getSensorHeight()) / (mole.getFocalLength() * mole.getOriginalImageHeight());
         // Pixels to mm
-        double realDiameterInMm = (realDiameterInPixels * INCH_TO_MM / mole.getDpi());
         // Set diameter in mm
-        mole.setDiameter(realDiameterInPixels);
+        mole.setDiameter(realDiameterInMm);
     }
 
     // Calculate the mole hue
@@ -79,10 +73,9 @@ public class MoleProcessor {
         mole.setHue(mean);
     }
 
-    // Calculate the mole shape
-    private static double getMoleShape(Mat srcMat) {
-        // TODO
-        return 0.0;
+    private static void calculateShapeCorrelation(Mat referenceMat, MoleModel mole) {
+        mole.setShapeCorrelation(Imgproc.matchShapes(referenceMat, mole.getBinarySegmentedImage(),
+                Imgproc.CV_CONTOURS_MATCH_I1, 0) * 1000);
     }
 
 }

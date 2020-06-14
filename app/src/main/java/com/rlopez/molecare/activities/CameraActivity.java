@@ -116,10 +116,6 @@ public class CameraActivity extends AppCompatActivity {
     // Take the photo
     private void takePhoto() {
 
-        // Show a progress dialog
-        final ProgressDialog progressDialog = ProgressDialog.show(CameraActivity.this, getString(R.string.processing),
-                getString(R.string.wait), true);
-
         if (cameraDevice == null) {
             return;
         }
@@ -171,20 +167,6 @@ public class CameraActivity extends AppCompatActivity {
                                 outputStream.close();
                             }
                             CameraActivity.this.finish();
-                            /*
-                            // Trim the image and rotate it if needed
-                            assert tempPhotoFile != null;
-                            Bitmap preProcessedPhoto = ImageProcessor.cropAndRotatePhoto(tempPhotoFile, trimDimension);
-                            try (FileOutputStream out = new FileOutputStream(photoFile)) {
-                                preProcessedPhoto.compress(Bitmap.CompressFormat.PNG, 100, out);
-                                tempPhotoFile.delete();
-                                progressDialog.dismiss();
-                                Toast.makeText(getApplicationContext(), R.string.photo_saved, Toast.LENGTH_SHORT).show();
-                                CameraActivity.this.finish();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }*/
-
                         } catch (IOException e) {
                             Toast.makeText(getApplicationContext(), R.string.error_creating_file, Toast.LENGTH_SHORT).show();
                         }

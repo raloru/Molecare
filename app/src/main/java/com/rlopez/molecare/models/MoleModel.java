@@ -25,6 +25,7 @@ public class MoleModel {
     private String path;
     private double diameter;
     private double hue;
+    private double shapeCorrelation;
 
     public MoleModel(String name, String focusDistance, String focalLength, String sensorHeight, String originalImageHeight, Double dpi, Mat originalImage, String path) {
         this.name = name;
@@ -124,6 +125,14 @@ public class MoleModel {
 
     public void setHue(double hue) {
         this.hue = hue;
+    }
+
+    public double getShapeCorrelation() {
+        return shapeCorrelation;
+    }
+
+    public void setShapeCorrelation(double shapeCorrelation) {
+        this.shapeCorrelation = shapeCorrelation;
     }
 
     public Double getSensorHeight() {

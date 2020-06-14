@@ -2,6 +2,7 @@ package com.rlopez.molecare.activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,6 +20,7 @@ import com.rlopez.molecare.models.MoleModel;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -53,6 +55,7 @@ public class AnalyseActivity extends AppCompatActivity {
         // Get elements from view
         GraphView diametersGraph = findViewById(R.id.diameters_graph);
         GraphView huesGraph = findViewById(R.id.hues_graph);
+        GraphView shapesGraph = findViewById(R.id.shapes_graph);
 
         // Init OpenCV
         OpenCVLoader.initDebug();
@@ -124,56 +127,65 @@ public class AnalyseActivity extends AppCompatActivity {
             // Create (date, diameter) data points and fill the corresponding graph
             DataPoint[] diameterDataPoints = new DataPoint[moles.size()];
             DataPoint[] hueDataPoints = new DataPoint[moles.size()];
+            DataPoint[] shapeCorrelationPoints = new DataPoint[moles.size()];
             double maxDiameter = 0.0;
             double minHue = Double.MAX_VALUE;
             double maxHue = 0.0;
-            for(int i = 0; i < moles.size(); i++) {
+            double maxShapeCorrelation = 0.0;
+            for (int i = 0; i < moles.size(); i++) {
                 diameterDataPoints[i] = new DataPoint(i, moles.get(i).getDiameter());
                 hueDataPoints[i] = new DataPoint(i, moles.get(i).getHue());
-                if(moles.get(i).getDiameter() > maxDiameter) {
+                shapeCorrelationPoints[i] = new DataPoint(i, moles.get(i).getShapeCorrelation());
+                if (moles.get(i).getDiameter() > maxDiameter) {
                     maxDiameter = moles.get(i).getDiameter();
                 }
-                if(moles.get(i).getHue() > maxHue) {
+                if (moles.get(i).getHue() > maxHue) {
                     maxHue = moles.get(i).getHue();
                 }
                 if (moles.get(i).getHue() < minHue) {
                     minHue = moles.get(i).getHue();
                 }
-
+                if (moles.get(i).getShapeCorrelation() > maxShapeCorrelation) {
+                    maxShapeCorrelation = moles.get(i).getShapeCorrelation();
+                }
+                Log.d("Debug", String.valueOf(moles.get(i).getShapeCorrelation()));
             }
 
             // Fill diameters and hues graph
-            fillGraph(diameterDataPoints, diametersGraph, 0.0, maxDiameter, true);
-            fillGraph(hueDataPoints, huesGraph, minHue, maxHue, false);
+            fillGraph(diameterDataPoints, diametersGraph, 0.0, maxDiameter, 0);
+            fillGraph(hueDataPoints, huesGraph, minHue, maxHue, 1);
+            fillGraph(shapeCorrelationPoints, shapesGraph, 0.0, maxShapeCorrelation, 2);
 
         }
 
         progressDialog.dismiss();
     }
 
-    private void fillGraph(DataPoint[] data, GraphView graph, double minValue, double maxValue, boolean diameter) {
+    private void fillGraph(DataPoint[] data, GraphView graph, double minValue, double maxValue, int type) {
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(data);
         series.setDrawDataPoints(true);
         series.setThickness(6);
 
         graph.addSeries(series);
         // Set max and min axis values
-        graph.getViewport().setMinY(0);
-        if(diameter) {
-            graph.getViewport().setMinY(0);
-            graph.getViewport().setMaxY(Math.round(maxValue) + 5);
-            graph.getViewport().setMinX(0);
-            graph.getViewport().setMaxX(moles.size());
-            graph.getViewport().setYAxisBoundsManual(true);
-            graph.getViewport().setXAxisBoundsManual(true);
-        } else {
-            graph.getViewport().setMinY(Math.round(minValue) - 15);
-            graph.getViewport().setMaxY(Math.round(maxValue) + 15);
-            graph.getViewport().setMinX(0);
-            graph.getViewport().setMaxX(moles.size());
-            graph.getViewport().setYAxisBoundsManual(true);
-            graph.getViewport().setXAxisBoundsManual(true);
+        switch (type) {
+            case 0:
+                graph.getViewport().setMinY(0);
+                graph.getViewport().setMaxY(Math.round(maxValue) + 5);
+                break;
+            case 1:
+                graph.getViewport().setMinY(Math.round(minValue) - 15);
+                graph.getViewport().setMaxY(Math.round(maxValue) + 15);
+                break;
+            case 2:
+                graph.getViewport().setMinY(0);
+                graph.getViewport().setMaxY(maxValue);
+                break;
         }
+        graph.getViewport().setMinX(0);
+        graph.getViewport().setMaxX(moles.size());
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setXAxisBoundsManual(true);
 
     }
 
