@@ -13,14 +13,13 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.rlopez.molecare.R;
 import com.rlopez.molecare.configuration.Configuration;
 import com.rlopez.molecare.images.ImagesInformation;
-import com.rlopez.molecare.images.MoleProcessor;
-import com.rlopez.molecare.models.ImageModel;
-import com.rlopez.molecare.models.MoleModel;
+import com.rlopez.molecare.analysis.MoleProcessor;
+import com.rlopez.molecare.images.ImageModel;
+import com.rlopez.molecare.analysis.MoleModel;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -174,12 +173,12 @@ public class AnalyseActivity extends AppCompatActivity {
                 graph.getViewport().setMaxY(Math.round(maxValue) + 5);
                 break;
             case 1:
-                graph.getViewport().setMinY(Math.round(minValue) - 15);
-                graph.getViewport().setMaxY(Math.round(maxValue) + 15);
+                graph.getViewport().setMinY(Math.round(minValue) - 30);
+                graph.getViewport().setMaxY(Math.round(maxValue) + 30);
                 break;
             case 2:
                 graph.getViewport().setMinY(0);
-                graph.getViewport().setMaxY(maxValue);
+                graph.getViewport().setMaxY(Math.max(1, maxValue));
                 break;
         }
         graph.getViewport().setMinX(0);

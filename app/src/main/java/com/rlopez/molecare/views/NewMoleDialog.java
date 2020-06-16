@@ -1,4 +1,4 @@
-package com.rlopez.molecare.dialogs;
+package com.rlopez.molecare.views;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

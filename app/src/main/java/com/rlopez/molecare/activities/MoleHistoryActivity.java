@@ -13,8 +13,8 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rlopez.molecare.R;
 import com.rlopez.molecare.configuration.Configuration;
-import com.rlopez.molecare.lists.CustomArrayAdapter;
-import com.rlopez.molecare.lists.RowItem;
+import com.rlopez.molecare.views.CustomArrayAdapter;
+import com.rlopez.molecare.views.RowItem;
 import com.rlopez.molecare.utils.FileManager;
 
 import androidx.annotation.NonNull;

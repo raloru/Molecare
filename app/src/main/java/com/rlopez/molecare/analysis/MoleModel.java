@@ -1,4 +1,4 @@
-package com.rlopez.molecare.models;
+package com.rlopez.molecare.analysis;
 
 import android.annotation.SuppressLint;
 

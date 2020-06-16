@@ -1,4 +1,4 @@
-package com.rlopez.molecare.lists;
+package com.rlopez.molecare.views;
 
 import android.graphics.Bitmap;
 

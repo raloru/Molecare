@@ -1,16 +1,11 @@
-package com.rlopez.molecare.images;
-
-import com.rlopez.molecare.models.MoleModel;
+package com.rlopez.molecare.analysis;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class MoleProcessor {
 
@@ -52,10 +47,12 @@ public class MoleProcessor {
         double realDiameterInMm;
         double imageDiameterInPixels;
         double distance;
+        // Corrects the excess pixels generated in the segmentation
+        double correctionFactor = 0.6;
         // Focus distance is given in diopters. 1 diopter = 1/1m
         distance = (1 / mole.getFocusDistance()) * 1000;
-        // Area = PI * D^2 / 4
-        imageDiameterInPixels = Math.sqrt(Core.countNonZero(mole.getBinarySegmentedImage()) * 4 / Math.PI) ;
+        // Area = PI * D^2 / 4 and a correction factor of 0.7
+        imageDiameterInPixels = Math.sqrt(Core.countNonZero(mole.getBinarySegmentedImage()) * correctionFactor * 4 / Math.PI) ;
         // Real height (px) = distance (mm) * object height (px) * sensor height (mm) / (focal length (mm) * original image height (px))
         realDiameterInMm = (distance * imageDiameterInPixels * mole.getSensorHeight()) / (mole.getFocalLength() * mole.getOriginalImageHeight());
         // Pixels to mm

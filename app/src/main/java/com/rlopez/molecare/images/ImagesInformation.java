@@ -5,7 +5,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.rlopez.molecare.R;
-import com.rlopez.molecare.models.ImageModel;
 
 import java.io.BufferedReader;
 import java.io.File;

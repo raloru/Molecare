@@ -5,7 +5,6 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -22,6 +21,7 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
+import android.hardware.camera2.params.MeteringRectangle;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
@@ -41,7 +41,7 @@ import com.rlopez.molecare.configuration.Configuration;
 import com.rlopez.molecare.utils.AutoFitTextureView;
 import com.rlopez.molecare.images.ImageProcessor;
 import com.rlopez.molecare.utils.FileManager;
-import com.rlopez.molecare.models.ImageModel;
+import com.rlopez.molecare.images.ImageModel;
 import com.rlopez.molecare.images.ImagesInformation;
 
 import java.io.File;
@@ -131,11 +131,19 @@ public class CameraActivity extends AppCompatActivity {
             // Capture builder to build a single capture
             final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
-            captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AF_MODE_AUTO);
+            //captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_AF_MODE_AUTO);
             captureBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
+            captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
+            captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
+            MeteringRectangle focusArea = new MeteringRectangle(2000,
+                    1500 ,
+                    150,
+                    150,
+                    1000);
+            captureBuilder.set(CaptureRequest.CONTROL_AF_REGIONS, new MeteringRectangle[]{focusArea});
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
-            captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_AF_STATE_FOCUSED_LOCKED);
-            captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED);
+            captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_AUTO);
+            captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
 
 
             // Set the listener for the image reader
