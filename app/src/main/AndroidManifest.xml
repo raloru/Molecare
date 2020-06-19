@@ -22,7 +22,7 @@
         <activity
             android:name=".activities.AnalyseActivity"
             android:label="@string/title_activity_analyse"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity

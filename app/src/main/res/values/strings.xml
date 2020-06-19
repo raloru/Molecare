@@ -51,4 +51,30 @@
     <string name="processing">Processing photo</string>
     <string name="analysing">The photos are being analyzed. Please wait…</string>
 
+    <!-- Graphs view -->
+    <string name="diameter_lbl">Diameter evolution</string>
+    <string name="hue_lbl">Hue evolution </string>
+    <string name="shape_lbl">Shape correlation</string>
+    <string name="diameter_btn">Diameter</string>
+    <string name="hue_btn">Hue</string>
+    <string name="shape_btn">Shape</string>
+    <string name="diameter_message_first">
+        This graph shows the evolution of the diameter in millimeters (y-axis) over time (x-axis).
+    </string>
+    <string name="diameter_message_second">
+        The normal limits of change are delimited by the green lines.
+    </string>
+    <string name="hue_message_first">
+        This graph shows the evolution of the hue (y axis) over time (x axis).
+    </string>
+    <string name="hue_message_second">
+        The hue can vary between 0 and 360 and the normal limits of change are delimited by the green lines.
+    </string>
+    <string name="shape_message_first">
+        This graph shows the correlation of the shape with the first photograph taken (y-axis) over time (x-axis).
+    </string>
+    <string name="shape_message_second">
+        The correlation is better the closer to zero and the maximum limit of change is delimited by the green line.
+    </string>
+
 </resources>

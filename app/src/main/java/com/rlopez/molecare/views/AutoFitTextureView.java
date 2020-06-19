@@ -1,4 +1,4 @@
-package com.rlopez.molecare.utils;
+package com.rlopez.molecare.views;
 
 import android.content.Context;
 import android.util.AttributeSet;

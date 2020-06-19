@@ -38,7 +38,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.rlopez.molecare.R;
 import com.rlopez.molecare.configuration.Configuration;
-import com.rlopez.molecare.utils.AutoFitTextureView;
+import com.rlopez.molecare.views.AutoFitTextureView;
 import com.rlopez.molecare.images.ImageProcessor;
 import com.rlopez.molecare.utils.FileManager;
 import com.rlopez.molecare.images.ImageModel;

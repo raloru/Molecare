@@ -72,7 +72,7 @@ public class MoleProcessor {
 
     private static void calculateShapeCorrelation(Mat referenceMat, MoleModel mole) {
         mole.setShapeCorrelation(Imgproc.matchShapes(referenceMat, mole.getBinarySegmentedImage(),
-                Imgproc.CV_CONTOURS_MATCH_I1, 0) * 1000);
+                Imgproc.CV_CONTOURS_MATCH_I1, 0) * 10000);
     }
 
 }
