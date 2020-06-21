@@ -1,6 +1,13 @@
+/*
+ * @author   Raúl López
+ * @version  1.0
+ * @year     2020
+ */
+
 package com.rlopez.molecare.views;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -26,15 +33,17 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem> {
     }
 
     // Private view holder class. Contains item view
-    private class ViewHolder {
+    private static class ViewHolder {
         TextView nameView;
         ImageView imageView;
     }
 
     // Get view with corresponding name and image
+    @NonNull
+    @SuppressLint("InflateParams")
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        ViewHolder holder = null;
+    public View getView(int position, View view, @NonNull ViewGroup parent) {
+        ViewHolder holder;
         RowItem item = getItem(position);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -44,8 +53,8 @@ public class CustomArrayAdapter extends ArrayAdapter<RowItem> {
             assert inflater != null;
             view = inflater.inflate(R.layout.list_item, null);
             holder = new ViewHolder();
-            holder.nameView = (TextView) view.findViewById(R.id.itemName);
-            holder.imageView = (ImageView) view.findViewById(R.id.itemImage);
+            holder.nameView = view.findViewById(R.id.itemName);
+            holder.imageView = view.findViewById(R.id.itemImage);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();

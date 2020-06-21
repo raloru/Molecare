@@ -1,3 +1,9 @@
+/*
+ * @author   Raúl López
+ * @version  1.0
+ * @year     2020
+ */
+
 package com.rlopez.molecare.views;
 
 import android.app.AlertDialog;
@@ -29,7 +35,7 @@ public class NewMoleDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         // Link view with corresponding layout and get input from view
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.new_mole_dialog, null);
         inputMoleName = view.findViewById(R.id.inputMoleName);
 

@@ -1,17 +1,19 @@
+/*
+ * @author   Raúl López
+ * @version  1.0
+ * @year     2020
+ */
+
 package com.rlopez.molecare.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.rlopez.molecare.R;
 import com.rlopez.molecare.configuration.Configuration;
-
-import org.opencv.android.OpenCVLoader;
 
 import java.io.File;
 import java.io.FileWriter;

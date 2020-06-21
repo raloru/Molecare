@@ -1,3 +1,9 @@
+/*
+ * @author   Raúl López
+ * @version  1.0
+ * @year     2020
+ */
+
 package com.rlopez.molecare.views;
 
 import android.content.Context;
@@ -7,12 +13,15 @@ import android.view.TextureView;
 public class AutoFitTextureView extends TextureView {
     private int mRatioWidth = 0;
     private int mRatioHeight = 0;
+
     public AutoFitTextureView(Context context) {
         this(context, null);
     }
+
     public AutoFitTextureView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
+
     public AutoFitTextureView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
@@ -25,6 +34,7 @@ public class AutoFitTextureView extends TextureView {
         mRatioHeight = height;
         requestLayout();
     }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

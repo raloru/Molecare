@@ -1,3 +1,9 @@
+/*
+ * @author   Raúl López
+ * @version  1.0
+ * @year     2020
+ */
+
 package com.rlopez.molecare.analysis;
 
 import org.opencv.core.Core;
@@ -52,7 +58,7 @@ public class MoleProcessor {
         // Focus distance is given in diopters. 1 diopter = 1/1m
         distance = (1 / mole.getFocusDistance()) * 1000;
         // Area = PI * D^2 / 4 and a correction factor of 0.7
-        imageDiameterInPixels = Math.sqrt(Core.countNonZero(mole.getBinarySegmentedImage()) * correctionFactor * 4 / Math.PI) ;
+        imageDiameterInPixels = Math.sqrt(Core.countNonZero(mole.getBinarySegmentedImage()) * correctionFactor * 4 / Math.PI);
         // Real height (px) = distance (mm) * object height (px) * sensor height (mm) / (focal length (mm) * original image height (px))
         realDiameterInMm = (distance * imageDiameterInPixels * mole.getSensorHeight()) / (mole.getFocalLength() * mole.getOriginalImageHeight());
         // Pixels to mm

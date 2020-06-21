@@ -1,3 +1,9 @@
+/*
+* @author   Raúl López
+* @version  1.0
+* @year     2020
+*/
+
 package com.rlopez.molecare.activities;
 
 import android.app.AlertDialog;
@@ -33,17 +39,9 @@ import java.util.Objects;
 
 public class AnalyseActivity extends AppCompatActivity {
 
-    // Mole path and folder
-    private String molePath;
-    private File moleFolder;
-
     // To get current configuration
     File configFilePath;
     Configuration configuration;
-
-    // To get images information
-    private ImagesInformation imagesInformation;
-    private List<ImageModel> imageModels;
 
     List<Mat> images;
     List<MoleModel> moles;
@@ -62,6 +60,10 @@ public class AnalyseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_analyse);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Show a progress dialog
+        ProgressDialog progressDialog = ProgressDialog.show(AnalyseActivity.this, "",
+                getString(R.string.analysing), true);
 
         // Get elements from view
         diameterGraph = findViewById(R.id.diameter_graph);
@@ -139,24 +141,21 @@ public class AnalyseActivity extends AppCompatActivity {
         // Initialize lists
         images = new ArrayList<>();
         moles = new ArrayList<>();
-        imageModels = new ArrayList<>();
 
         // Set parent path and current folder
         Bundle extras = getIntent().getExtras();
         assert extras != null;
-        molePath = extras.getString("MOLE_PATH");
+        // Mole path and folder
+        String molePath = extras.getString("MOLE_PATH");
         assert molePath != null;
-        moleFolder = new File(molePath);
+        File moleFolder = new File(molePath);
 
         // Read images information
-        imagesInformation = ImagesInformation.readImagesInformationJSON(new File(moleFolder, "ImagesInformation.json"), getApplicationContext());
-        imageModels = imagesInformation.getImageModels();
+        // To get images information
+        ImagesInformation imagesInformation = ImagesInformation.readImagesInformationJSON(new File(moleFolder, "ImagesInformation.json"), getApplicationContext());
+        List<ImageModel> imageModels = imagesInformation.getImageModels();
 
         setTitle(getString(R.string.analysis) + ": " + moleFolder.getName());
-
-        // Show a progress dialog
-        ProgressDialog progressDialog = ProgressDialog.show(AnalyseActivity.this, "",
-                getString(R.string.analysing), true);
 
         // Create new filename filter
         FilenameFilter fileNameFilter = new FilenameFilter() {

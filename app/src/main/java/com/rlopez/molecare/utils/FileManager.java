@@ -1,17 +1,18 @@
+/*
+ * @author   Raúl López
+ * @version  1.0
+ * @year     2020
+ */
+
 package com.rlopez.molecare.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.rlopez.molecare.R;
-import com.rlopez.molecare.activities.MoleHistoryActivity;
 import com.rlopez.molecare.images.ImagesInformation;
-
-import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -35,7 +36,7 @@ public class FileManager {
         assert children != null;
         for (String child : children) {
             File toDelete = new File(folder, child);
-            if(toDelete.isDirectory()) {
+            if (toDelete.isDirectory()) {
                 deleteFolderAndChildren(toDelete);
             } else {
                 toDelete.delete();
@@ -53,7 +54,7 @@ public class FileManager {
         if (children.length == 4) {
             for (String child : children) {
                 File toDelete = new File(parent, child);
-                if(toDelete.isDirectory()) {
+                if (toDelete.isDirectory()) {
                     deleteFolderAndChildren(toDelete);
                 } else {
                     toDelete.delete();

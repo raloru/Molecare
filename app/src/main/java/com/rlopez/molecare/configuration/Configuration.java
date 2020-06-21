@@ -1,3 +1,9 @@
+/*
+ * @author   Raúl López
+ * @version  1.0
+ * @year     2020
+ */
+
 package com.rlopez.molecare.configuration;
 
 import android.content.Context;
@@ -11,6 +17,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import static java.io.File.separator;
+
 // Maps JSON config file
 public class Configuration {
 
@@ -21,12 +29,12 @@ public class Configuration {
         paths = new Paths();
         imageConfiguration = new ImageConfiguration();
         paths.setImagesPath(imagesPath);
-        paths.setHeadImagesPath(imagesPath + File.separator + "Head moles");
-        paths.setTorsoImagesPath(imagesPath + File.separator + "Torso moles");
-        paths.setLeftArmImagesPath(imagesPath + File.separator + "Left arm moles");
-        paths.setRightArmImagesPath(imagesPath + File.separator + "Right arm moles");
-        paths.setLeftLegImagesPath(imagesPath + File.separator + "Left leg moles");
-        paths.setRightLegImagesPath(imagesPath + File.separator + "Right leg moles");
+        paths.setHeadImagesPath(imagesPath + separator + "Head moles");
+        paths.setTorsoImagesPath(imagesPath + separator + "Torso moles");
+        paths.setLeftArmImagesPath(imagesPath + separator + "Left arm moles");
+        paths.setRightArmImagesPath(imagesPath + separator + "Right arm moles");
+        paths.setLeftLegImagesPath(imagesPath + separator + "Left leg moles");
+        paths.setRightLegImagesPath(imagesPath + separator + "Right leg moles");
         imageConfiguration.setTrimDimension("512");
     }
 

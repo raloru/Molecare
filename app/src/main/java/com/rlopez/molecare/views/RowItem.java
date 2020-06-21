@@ -1,5 +1,11 @@
 package com.rlopez.molecare.views;
 
+/*
+ * @author   Raúl López
+ * @version  1.0
+ * @year     2020
+ */
+
 import android.graphics.Bitmap;
 
 // This class represents each row in used lists. It has a name and an image

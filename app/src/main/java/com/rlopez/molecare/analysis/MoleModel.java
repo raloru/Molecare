@@ -1,3 +1,9 @@
+/*
+ * @author   Raúl López
+ * @version  1.0
+ * @year     2020
+ */
+
 package com.rlopez.molecare.analysis;
 
 import android.annotation.SuppressLint;

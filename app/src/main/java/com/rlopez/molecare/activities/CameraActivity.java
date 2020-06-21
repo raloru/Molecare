@@ -1,9 +1,18 @@
+/*
+ * @author   Raúl López
+ * @version  1.0
+ * @year     2020
+ */
+
 package com.rlopez.molecare.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+
+import androidx.annotation.NonNull;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -53,6 +62,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static android.hardware.camera2.CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE;
 
@@ -136,7 +146,7 @@ public class CameraActivity extends AppCompatActivity {
             captureBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
             captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);
             MeteringRectangle focusArea = new MeteringRectangle(2000,
-                    1500 ,
+                    1500,
                     150,
                     150,
                     1000);
@@ -191,12 +201,12 @@ public class CameraActivity extends AppCompatActivity {
             // Handle capture started and completed
             final CameraCaptureSession.CaptureCallback previewSession = new CameraCaptureSession.CaptureCallback() {
                 @Override
-                public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {
+                public void onCaptureStarted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, long timestamp, long frameNumber) {
                     super.onCaptureStarted(session, request, timestamp, frameNumber);
                 }
 
                 @Override
-                public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+                public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
 
                     // If creating a new mole, create needed folder
@@ -251,7 +261,7 @@ public class CameraActivity extends AppCompatActivity {
             };
             cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
                 @Override
-                public void onConfigured(CameraCaptureSession session) {
+                public void onConfigured(@NonNull CameraCaptureSession session) {
                     try {
                         session.capture(captureBuilder.build(), previewSession, handler);
                     } catch (Exception e) {
@@ -260,7 +270,7 @@ public class CameraActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onConfigureFailed(CameraCaptureSession session) {
+                public void onConfigureFailed(@NonNull CameraCaptureSession session) {
                 }
             }, handler);
         } catch (CameraAccessException e) {
@@ -329,19 +339,19 @@ public class CameraActivity extends AppCompatActivity {
     // Manage camera device callbacks
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override
-        public void onOpened(CameraDevice camera) {
+        public void onOpened(@NonNull CameraDevice camera) {
             // When camera device is opened, get it and start it
             cameraDevice = camera;
             startCamera();
         }
 
         @Override
-        public void onDisconnected(CameraDevice camera) {
+        public void onDisconnected(@NonNull CameraDevice camera) {
             // Not used
         }
 
         @Override
-        public void onError(CameraDevice camera, int error) {
+        public void onError(@NonNull CameraDevice camera, int error) {
             // Not used
         }
     };
@@ -402,13 +412,13 @@ public class CameraActivity extends AppCompatActivity {
         try {
             cameraDevice.createCaptureSession(Collections.singletonList(surface), new CameraCaptureSession.StateCallback() {
                 @Override
-                public void onConfigured(CameraCaptureSession session) {
-                    captureSession = session;
+                public void onConfigured(@NonNull CameraCaptureSession session) {
+                    captureSession = Objects.requireNonNull(session);
                     getChangedPreview();
                 }
 
                 @Override
-                public void onConfigureFailed(CameraCaptureSession session) {
+                public void onConfigureFailed(@NonNull CameraCaptureSession session) {
                 }
             }, null);
         } catch (CameraAccessException e) {
