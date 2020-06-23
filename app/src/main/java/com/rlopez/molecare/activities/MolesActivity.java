@@ -79,7 +79,7 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
         currentFolder = new File(bodyPartPath);
 
         // Set activity title
-        setTitle(currentFolder.getName());
+        setTitle(getCustomTitle(currentFolder.getName()));
 
         // Fill list with corresponding folders
         getMoles();
@@ -138,6 +138,32 @@ public class MolesActivity extends AppCompatActivity implements NewMoleDialog.Ne
                 checkCameraPermission();
             }
         });
+    }
+
+    // Get the title translated if necessary
+    private String getCustomTitle(String name) {
+        String res = "";
+        switch (name) {
+            case "Head moles":
+                res = getString(R.string.head_moles);
+                break;
+            case "Torso moles":
+                res = getString(R.string.torso_moles);
+                break;
+            case "Left arm moles":
+                res = getString(R.string.left_arm_moles);
+                break;
+            case "Right arm moles":
+                res = getString(R.string.right_arm_moles);
+                break;
+            case "Left leg moles":
+                res = getString(R.string.left_leg_moles);
+                break;
+            case "Right leg moles":
+                res = getString(R.string.right_leg_moles);
+                break;
+        }
+        return res;
     }
 
     private void getMoles() {
