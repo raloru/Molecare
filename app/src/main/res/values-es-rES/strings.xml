@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Titles -->
+    <string name="app_name">Molecare</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_moles">MolesActivity</string>
+    <string name="title_activity_mole_history">MoleHistoryActivity</string>
+    <string name="head_moles">Lunares de la cabeza</string>
+    <string name="torso_moles">Lunares del torso</string>
+    <string name="left_arm_moles">Lunares del brazo izquierdo</string>
+    <string name="right_arm_moles">Lunares del brazo derecho</string>
+    <string name="left_leg_moles">Lunares de la pierna izquierda</string>
+    <string name="right_leg_moles">Lunares de la pierna derecha</string>
+    <string name="analysis">Análisis</string>
+    <string name="title_activity_analyse">AnalyseActivity</string>
+
+    <!-- Permissions -->
+    <string name="camera_permission_details">
+        Esta APP necesita los permisos de la cámara para añadir nuevos lunares.
+    </string>
+
+    <!-- Errors -->
+    <string name="error_camera_not_found">Error: Cámara no encontrada.</string>
+    <string name="error_creating_file">Error: No es posible crear el archivo.</string>
+    <string name="error_access_camera">Error: No es posible acceder al dispositivo de la cámara.</string>
+    <string name="error_empty_name">Error: El nombre del nuevo lunar no puede estar vacío.</string>
+    <string name="error_mole_name_exists">Error: Ya existe un lunar con ese nombre.</string>
+    <string name="error_unexpected">Error inesperado. Por favor, inténtalo de nuevo.</string>
+    <string name="error_config_file">Error: No se puede leer el archivo de configuración.</string>
+
+    <!-- Notifications -->
+    <string name="new_mole_created">Lunar creado con éxito.</string>
+    <string name="photo_saved">¡La imagen se ha guardado con éxito!</string>
+    <string name="deleted"> ha sido eliminado</string>
+
+
+    <!-- Dialogs -->
+    <string name="title_new_mole">Nuevo lunar</string>
+    <string name="name_new_mole">El nombre del nuevo lunar no puede ser vacío y debe ser diferente a los nombres ya existentes.</string>
+    <string name="hint_new_mole">Nombre del nuevo lunar</string>
+    <string name="ok">OK</string>
+    <string name="cancel">CANCELAR</string>
+    <string name="capture">Capturar</string>
+    <string name="photo_instructions_title">Instrucciones</string>
+    <string name="photo_instructions">Por favor, asegúrate de que el lunar se encuentra dentro del área coloreada al realizar la fotografía.</string>
+    <string name="delete">Borrar</string>
+    <string name="delete_first_part">¿Quieres borrar </string>
+    <string name="delete_mole_second_part">y todo su historial?</string>
+    <string name="wait">Por favor, espera…</string>
+    <string name="processing">Procesando fotografía</string>
+    <string name="analysing">Las fotografías están siendo analizadas. Por favor, espera…</string>
+
+    <!-- Graphs view -->
+    <string name="diameter_lbl">Evolución del diámetro</string>
+    <string name="hue_lbl">Evolución del matiz</string>
+    <string name="shape_lbl">Correlación de la forma</string>
+    <string name="diameter_btn">Diámetro</string>
+    <string name="hue_btn">Matiz</string>
+    <string name="shape_btn">Forma</string>
+    <string name="diameter_message_first">
+        Este gráfico muestra la evolución del diámetro en milímetros (eje y) a lo largo del tiempo (eje x).
+    </string>
+    <string name="diameter_message_second">
+        Los valores normales de cambio quedan delimitados por las líneas verdes.
+    </string>
+    <string name="hue_message_first">
+        Este gráfico muestra la evolución del matiz (eje y) a lo largo del tiempo (eje x).
+    </string>
+    <string name="hue_message_second">
+        El matiz puede variar entre los valores 0 y 360, y los valores normales de cambio quedan delimitados por las líneas verdes.
+    </string>
+    <string name="shape_message_first">
+        Este gráfico muestra le correlación de la forma con la primera fotografía tomada (eje y) a lo largo del tiempo (eje x).
+    </string>
+    <string name="shape_message_second">
+        La correlación es mejor cuanto más se acerque a cero y el valor máximo de cambio queda delimitado por las línea verde.
+    </string>
+
+</resources>

@@ -29,15 +29,13 @@
 
     <!-- Notifications -->
     <string name="new_mole_created">Mole created successfully.</string>
-    <string name="focus_locked">Focus has been locked</string>
-    <string name="focus_unlocked">Focus has been unlocked</string>
     <string name="photo_saved">The photo has been successfully saved!</string>
     <string name="deleted"> has been deleted</string>
 
 
     <!-- Dialogs -->
     <string name="title_new_mole">New mole</string>
-    <string name="name_new_mole">The field below cannot be empty and must be different from the existing ones.</string>
+    <string name="name_new_mole">The new mole name cannot be empty and must be different from the existing ones.</string>
     <string name="hint_new_mole">Name of the new mole</string>
     <string name="ok">OK</string>
     <string name="cancel">CANCEL</string>
@@ -62,19 +60,19 @@
         This graph shows the evolution of the diameter in millimeters (y-axis) over time (x-axis).
     </string>
     <string name="diameter_message_second">
-        The normal limits of change are delimited by the green lines.
+        The normal values of change are delimited by the green lines.
     </string>
     <string name="hue_message_first">
         This graph shows the evolution of the hue (y axis) over time (x axis).
     </string>
     <string name="hue_message_second">
-        The hue can vary between 0 and 360 and the normal limits of change are delimited by the green lines.
+        The hue can vary between 0 and 360 and the normal values of change are delimited by the green lines.
     </string>
     <string name="shape_message_first">
         This graph shows the correlation of the shape with the first photograph taken (y-axis) over time (x-axis).
     </string>
     <string name="shape_message_second">
-        The correlation is better the closer to zero and the maximum limit of change is delimited by the green line.
+        The correlation is better the closer to zero and the maximum value of change is delimited by the green line.
     </string>
 
 </resources>
